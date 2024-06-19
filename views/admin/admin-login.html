@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- link to css  -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <!-- box icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Login</title>
+</head>
+
+<body class="home">
+    <header>
+        <div class="py-2" id="main-header">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAcFJREFUWEft17tqVUEUxvFfvGChAQsRFS0skkJ8Ay0s9C0URC3sVCyEqEhABEXU1kbBwkbfQBsb30BBIaTwgoKFoIGA17NkTthscs7M2U6RwJ7mwMxa3/rvb65nyhprU2uMRw+Um5HeoUkduoB5TOcSK41/wzXcHeq1p+w7tlYqViqzhG2jgP6UqlSOWzGm7dC6AbqOX8mVq9hQ6FDkRG60jbgyIm9ih3bhcxL7iN2FQO+xL8XuwYdaQEfwIok9xMlCoPs4m2KP4lktoFu4lMRm8TpNwTiuZUTsuxR0D+dqAX3BfsSxEC3OqzsZl04h3Iy2HYvpd7W0iddQiATAxYZaFLyJHa0KsU7O42mjPzfNnYBC/zQeNAptwQnsTX1v8GSwm342YuIjbmfc7AwU59SZFtS4Wpcb235cXGegoehz3Eg773er0mYcw9xgVx0q3I3/DTSs8xUv8XbgxCbM4HCH+7AaUKEB2bAeKGdR71DvUM6B3Pj6WUM/0gGX+6Ka43Hvxen+r7Xf1K9woGa1Aq2oeXAU0HE8WgW0QLdTSNyD8Vp4PAoo+uM+istxZ6cS5Umf0pN2oZnS/7fPGdg7lHPoL4VXTSWM0mESAAAAAElFTkSuQmCC"
+                        class="mr-3" height="30" />
+                    <span>MYCART.com</span>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </header>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 mx-auto">
+            <div class="container">
+                <br />
+                <br />
+                <div class="card" style="background-color: #f7af93">
+                    <div class="card-body">
+                        <h2 class="card-title">Login</h2>
+
+                        <form id="login">
+                            <div class="form-floating">
+                                <input type="email" id="email" name="Email" class="form-control" placeholder="Email"
+                                    required />
+                                <label for="email" class="form-label">Enter Email</label>
+                                <br />
+                            </div>
+
+                            <div class="form-floating">
+                                <input type="password" id="password" name="Password" class="form-control"
+                                    placeholder="Enter Password" required />
+                                <label for="password" class="form-label">Enter Password</label>
+                                <br />
+                            </div>
+
+                            <button class="btn btn-block" id="button" type="submit"
+                                style="color: black; background-color: #e94c0e;">Login</button>
+                        </form>
+                        <br>
+                        <a href="/password/forgotPassword">Forgot Password</a>
+                        <br>
+                        <br>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/js/admin/admin-login.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+</body>
+
+</html>

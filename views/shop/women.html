@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- link to css  -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- box icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>myCart</title>
+</head>
+
+<body>
+    <header>
+        <div class="py-2" id="main-header">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <a href="/home/" style="color: black;">
+                        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAcFJREFUWEft17tqVUEUxvFfvGChAQsRFS0skkJ8Ay0s9C0URC3sVCyEqEhABEXU1kbBwkbfQBsb30BBIaTwgoKFoIGA17NkTthscs7M2U6RwJ7mwMxa3/rvb65nyhprU2uMRw+Um5HeoUkduoB5TOcSK41/wzXcHeq1p+w7tlYqViqzhG2jgP6UqlSOWzGm7dC6AbqOX8mVq9hQ6FDkRG60jbgyIm9ih3bhcxL7iN2FQO+xL8XuwYdaQEfwIok9xMlCoPs4m2KP4lktoFu4lMRm8TpNwTiuZUTsuxR0D+dqAX3BfsSxEC3OqzsZl04h3Iy2HYvpd7W0iddQiATAxYZaFLyJHa0KsU7O42mjPzfNnYBC/zQeNAptwQnsTX1v8GSwm342YuIjbmfc7AwU59SZFtS4Wpcb235cXGegoehz3Eg773er0mYcw9xgVx0q3I3/DTSs8xUv8XbgxCbM4HCH+7AaUKEB2bAeKGdR71DvUM6B3Pj6WUM/0gGX+6Ka43Hvxen+r7Xf1K9woGa1Aq2oeXAU0HE8WgW0QLdTSNyD8Vp4PAoo+uM+istxZ6cS5Umf0pN2oZnS/7fPGdg7lHPoL4VXTSWM0mESAAAAAElFTkSuQmCC"
+                            class="mr-3" height="30" />
+                        <span>MYCART.com</span>
+                    </a>
+                </div>
+                <div class="d-flex align-items-center search-container">
+                    <input type="text" class="form-control mr-6" placeholder="Search products..." id="searchBox">
+                    <button class="btn" id="seachBtn"><img
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAv5JREFUWEfVl1mojVEUx3/XWAp54xozRMjNi4QHUaYoD4iMxeVFoUSUlGRMJCRkKFIohVAyPSBPFGXIFJFQlIyZ9l/ruN/dfed8e1/nHMd6Oef7zlr//T9r3lVUmFRVGB/+W0LDgBHAQKAr0BZ4CTwCrrn3Z4HLxfB2lodqgO3A4IDDzgPzgbsBunlVChGaDuwGmkcc8AmYBJyKsKmnmo/QBOBoQvObC9NO4CJwD3hsoesFKJxzgcYJfYX3XENIpRHqDNwCWhrgQ2AMcL/AAX2BM0AH03kN9HYhfBNLKo3QcWC8AckbQwKBReYq0NFsdwHz/pbQAOC6gXwFegJPIkBVBDfgdzv5CXS3SgyG8D20BVhg1vq+KBipTvGwq7TJ9rgE2BiD4RNSycorkkHWY2LwpDvR5c8RM7oADI8B8Am9A1obQCvgfQyY6XaxKtTjU0BFEiw+IeVNU7NuAnwPRqpTVN/6bI/qSy1iMHxCL4B2BqBPjYdYqQaem5HaR78YAJ/QFcsdYYy2GRWDJ91xwAkzOgRMiwHwCa0AVhnAHvdPa2PATPcgMNW+L3Uh2xCD4RPSKLhjAD+s26o5hor60E1T/gL0AJ6FGksvrVMfcM1shoE8sEn/KgC0k3Xq9qa72hWFPB4laYSUlLeBNoakQToqY5b1B07bniQzFUM34GMUmzweEsZY4GQCTNN+B3ApMe3VQDVAhwJzPKxjbuTMAj4Ui5BwpgD7gWYRoOo/yiFtlm8BjZ+tgBpukGRtjH2AbeaFLECNCVWlvKncyzVYhW19onoL4mQRyhlrCRuZ2KmVZ40sR7RL7/MWOi1z/uqhBFeiF4VQFo7/uypOF4DkFimdlVmeCvVQLCHprwGWpRiqUaphpkopCQlbl4TZKSerWPRezbeelJKQDlKe7XXryMwUUnqvdqHN8o+UmlDuoM2u9BemkNKVKXm7KetVWqvs4gSptcDycofMP2+dJbSIbUrL6nKFLHm2Ro1GUNmrrCGtoqw5FETwX4SsILGKI/QL1St7JZXUgxYAAAAASUVORK5CYII=" /></button>
+                </div>
+                <div class="d-flex align-items-center">
+
+                    <a href="/cart">
+                        <i class='bx bx-shopping-bag' id="cart-icon" data-quantity="0"></i>
+                        <!-- <i class='bx bxs-cart' ></i> -->
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+    </header>
+
+    <nav class="navbar navbar-expand-lg " style="background-color: #fab397;">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span><i class='bx bx-menu'></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home/men">Men</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/home/women">Women <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/home/kids">Kids</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="home" id="home">
+        <div class="home-img container">
+            <img src="/extras/home.png" alt="">
+        </div>
+    </section>
+    <section class="products container" id="products">
+        <h2 class="heading">Discover Products</h2>
+        <div class="product-container" id="productList"></div>
+        <br>
+        <br>
+
+        <ul class="pagination justify-content-center" id="rpagination"></ul>
+
+        </div>
+    </section>
+
+
+
+    <script src="/js/shop/home.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+</body>
+
+</html>

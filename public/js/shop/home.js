@@ -1,5 +1,92 @@
 const website = 'http://localhost:4000';
 
+const signupForm = document.getElementById('signupForm');
+signupForm.addEventListener('submit', signup);
+
+const login = document.getElementById("loginForm");
+login.addEventListener("submit", loginUser);
+
+async function signup(e) {
+  try {
+
+    e.preventDefault();
+
+    let name = document.getElementById("sname").value;
+    let email = document.getElementById("semail").value;
+    let password = document.getElementById("spassword").value;
+
+    const details = {
+      Name: name,
+      Email: email,
+      Password: password,
+    };
+
+    if (name.trim() === "" || email.trim() === "" || password.trim() === "") {
+      return;
+    }
+
+
+    const res = await axios.post(
+      `/home/addUser`,
+      details
+    );
+
+    document.getElementById('signupModalClose').click()
+    const modal = new bootstrap.Modal(document.getElementById('loginModal'))
+    modal.show()
+
+
+  } catch (err) {
+    if (err.response.status === 409) {
+      alert(err.response.data.message);
+    }
+    else {
+
+      document.body.innerHTML =
+        document.body.innerHTML + `<h4 style="color: red;">${err}</h4>`;
+      console.log(err);
+    }
+  }
+}
+
+async function loginUser(e) {
+  e.preventDefault();
+
+  let email = document.getElementById("lemail").value;
+  let password = document.getElementById("lpassword").value;
+
+  const details = {
+    Email: email,
+    Password: password,
+  };
+
+  try {
+    const res = await axios.post(
+      `/home/loginCheck`,
+      details
+    );
+
+    localStorage.setItem("userToken", res.data.token);
+    document.getElementById('loginModalClose').click();
+
+    //document.getElementById("email").value = "";
+    //document.getElementById("password").value = "";
+  } catch (err) {
+    if (err.response.status < 500) {
+      alert(err.response.data.message);
+    }
+    else {
+
+      document.body.innerHTML =
+        document.body.innerHTML + `<h4 style="color: red;">${err}</h4>`;
+      console.log(err);
+    }
+  }
+
+}
+
+
+
 //show products on page
 async function showProducts(category, page) {
   try {
@@ -29,6 +116,7 @@ async function showProducts(category, page) {
       localStorage.removeItem('wPage');
       localStorage.removeItem('mPage');
       localStorage.removeItem('kPage');
+      console.log(res);
     }
 
 
@@ -45,16 +133,31 @@ async function showProducts(category, page) {
         <div class="product-info">
             <h2 class="product-title">${product.title}</h2>
             <p class="product-price">Rs.${product.price.toFixed(2)}</p>
-            <a class="add-to-cart" data-id="${product._id}">Add to Cart</a>
+            <a class="add-to-cart" id="${product._id}">Add to Cart</a>
         </div>
     </div>`
 
       ).join("");
 
-    if (window.location.href !== `${website}/home/`) {
+    const addButtons = Array.from(document.getElementsByClassName('add-to-cart'));
+    addButtons.forEach((element) => {
+      element.addEventListener('click', async function () {
+        this.innerHTML = "Added";
+        this.style.backgroundColor = 'Blue';
+        // console.log(this.id);
+
+        await axios.post(`/addToCart?id=${this.id}`)
+      });
+    })
+
+
+    // addToCart = Array.from(addToCart);
+    // console.log('Add to cart', addToCart);
+
+    if (window.location.href !== `${website}/home`) {
       showPagination(res)
     }
-    console.log(res.data)
+    // console.log(res.data)
 
 
 
@@ -125,8 +228,9 @@ function showPagination(res) {
 window.addEventListener('DOMContentLoaded', async () => {
   try {
 
-    if (window.location.href === `${website}/home/`) {
+    if (window.location.href === `${website}/home`) {
       showProducts('Featured');
+      console.log('***********')
 
     }
 
@@ -159,3 +263,5 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
 })
+
+

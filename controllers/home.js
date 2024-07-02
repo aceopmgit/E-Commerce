@@ -1,8 +1,13 @@
 const path = require('path');
 const mongoose = require('mongoose');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const AdminUser = require('../models/AdminUser');
 const Product = require('../models/Product');
+const User = require("../models/User");
+
+
 const { men, women, kids, featured } = require('../public/extras/products');
 
 exports.home = (req, res, next) => {
@@ -21,7 +26,7 @@ exports.kids = (req, res, next) => {
 }
 
 exports.viewProduct = (req, res, next) => {
-    let id = Number(req.query.id);
+
     res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'viewProduct.html'));
 }
 
@@ -119,6 +124,103 @@ async function ProductCheck() {
 
 }
 
+function isStringInvalid(string) {
+    if (string === undefined || string.length === 0) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+function generateAccessToken(id, name) {
+    return jwt.sign({ userId: id, name: name, }, process.env.TOKEN_SECRET);
+}
+
+exports.addUser = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const name = req.body.Name;
+        const email = req.body.Email;
+        const password = req.body.Password;
+
+        let userExist = await User.findOne({ email })
+
+        if (isStringInvalid(name) || isStringInvalid(email) || isStringInvalid(password)) {
+            return res.status(400).json({ status: false, message: 'Bad Parameter. Something is Misssing !' });
+        }
+
+        if (!userExist) {
+            bcrypt.hash(password, 10, async (err, hash) => {
+                console.log(err);
+
+                const user = new User({
+                    name: name,
+                    email: email,
+                    password: hash,
+                },);
+
+                await user.save()
+
+                await session.commitTransaction()
+                res.status(201).json({ status: true, message: "User Signed Up Successfully" });
+            });
+        }
+        else {
+            res.status(409).json({ message: 'Email already exist!' });
+        }
+
+
+    } catch (err) {
+        await session.abortTransaction();
+        res.status(500).json({
+            Error: err,
+        });
+        console.log(err)
+    } finally {
+        session.endSession
+    }
+};
+
+exports.loginCheck = async (req, res, next) => {
+    try {
+        const email = req.body.Email;
+        const password = req.body.Password;
+
+        if (isStringInvalid(email) || isStringInvalid(password)) {
+            return res.status(400).json({ status: false, message: 'Bad Parameter. Something is Misssing !' });
+        }
+
+        const loginDetail = await User.findOne({ email: email });
+        // console.log(`****************loginDetails***********${loginDetail}*********************${loginDetail._id}`);
+        if (loginDetail) {
+            bcrypt.compare(password, loginDetail.password, (err, result) => {
+                if (result === true) {
+                    res.status(200).json({
+                        success: true,
+                        message: "User Logged in Successfully !",
+                        token: generateAccessToken(loginDetail._id, loginDetail.name),
+                    });
+                } else {
+                    res
+                        .status(400)
+                        .json({ success: false, message: "Incorrect Password !" });
+                }
+            });
+        } else {
+            res.status(404).json({ success: false, message: "User not Found" });
+        }
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err,
+        });
+        console.log(err)
+    }
+};
+
+
 
 exports.getFeaturedProducts = async (req, res, next) => {
     try {
@@ -137,7 +239,6 @@ exports.getFeaturedProducts = async (req, res, next) => {
         });
     }
 }
-
 
 exports.getMenProducts = async (req, res, next) => {
 
@@ -168,6 +269,7 @@ exports.getMenProducts = async (req, res, next) => {
 
 
 }
+
 exports.getProduct = async (req, res, next) => {
 
     try {
@@ -222,6 +324,7 @@ exports.getWomenProducts = async (req, res, next) => {
 
 
 }
+
 exports.getKidsProducts = async (req, res, next) => {
 
     try {
@@ -249,6 +352,34 @@ exports.getKidsProducts = async (req, res, next) => {
         res.status(500).json({
             Error: err,
         });
+    }
+
+
+}
+
+exports.addToCart = async (req, res, next) => {
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const id = req.query.id;
+        const quantity = req.query.quantity || 1;
+
+
+
+
+        await session.commitTransaction();
+        res.status(201).json({ success: true });
+    } catch (err) {
+        console.log(err)
+        await session.abortTransaction();
+        res.status(500).json({
+            Error: err,
+            success: true
+        });
+    } finally {
+        session.endSession();
+
     }
 
 

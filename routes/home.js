@@ -14,6 +14,9 @@ router.get('/getWomenProducts', homeController.getWomenProducts);
 router.get('/getKidsProducts', homeController.getKidsProducts);
 router.get('/viewProduct', homeController.viewProduct);
 router.get('/cart', homeController.cart);
+router.post('/addToCart', homeController.addToCart);
+router.post('/addUser', homeController.addUser);
+router.post('/loginCheck', homeController.loginCheck);
 router.get('/', homeController.home);
 
 

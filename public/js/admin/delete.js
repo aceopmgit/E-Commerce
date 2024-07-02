@@ -3,7 +3,7 @@ async function showProducts(page) {
         const token = localStorage.getItem('adminToken')
         const res = await axios.get(`/admin/getAllProducts?page=${page}`, { headers: { "Authorization": token } });
 
-        localStorage.setItem('editPage', page);
+        localStorage.setItem('deletePage', page);
 
         const productsList = document.getElementById('productList');
 
@@ -104,7 +104,7 @@ function showPagination(res) {
 
 window.addEventListener('DOMContentLoaded', async () => {
     try {
-        let page = localStorage.getItem('editPage') || 1;
+        let page = localStorage.getItem('deletePage') || 1;
         showProducts(page);
 
     }

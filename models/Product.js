@@ -7,7 +7,11 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
-    price: {
+    originalPrice: {
+        type: Number,
+        required: true
+    },
+    currentPrice: {
         type: Number,
         required: true
     },

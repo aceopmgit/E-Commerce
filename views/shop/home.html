@@ -47,7 +47,7 @@
                                     d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                             </svg>
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdown-menu">
                             <!-- <a class="dropdown-item" href="#">New User ? Signup</a>
                             <a class="dropdown-item" href="#">Login</a> -->
 
@@ -55,6 +55,8 @@
                                 data-bs-target="#signupModal">New User ? Signup</button>
                             <button class="dropdown-item" id='login' data-bs-toggle="modal"
                                 data-bs-target="#loginModal">Login</button>
+
+
 
                         </div>
                     </div>
@@ -70,94 +72,252 @@
 
     </header>
 
-    <!-- Signup Modal -->
-    <div class="modal fade" id="signupModal">
 
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+    <div id="modals">
+        <!-- Signup Modal -->
+        <div class="modal fade" id="signupModal">
 
-                <div class="modal-header" style="background-color: #e94c0e;">
-                    Signup
-                </div>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
 
-                <div class="modal-body" style="background-color: #f7af93;">
-                    <form id="signupForm">
-                        <div class="form-floating">
-                            <input type="text" id="sname" name="sname" class="form-control" placeholder="Name" autofocus
-                                required />
-                            <label for="name" class="form-label">Name</label>
-                            <br />
-                        </div>
-                        <div class="form-floating">
-                            <input type="email" id="semail" name="Email" class="form-control" placeholder="Email"
-                                required />
-                            <label for="email" class="form-label">Email</label>
-                            <br />
-                        </div>
-
-                        <div class="form-floating">
-                            <input type="password" id="spassword" name="Password" class="form-control"
-                                placeholder="Enter Password" required />
-                            <label for="password" class="form-label">Password</label>
-                            <br />
-                        </div>
-
-                    </form>
-                    <div class="modal-footer" style="background-color: #f7af93">
-                        <button class="btn btn-outline-success" type="submit" form="signupForm">Signup</button>
-
-                        <button class="btn btn-outline-danger" data-bs-dismiss="modal" data-bs-target="#modal"
-                            id="signupModalClose">Close</button>
+                    <div class="modal-header" style="background-color: #e94c0e;">
+                        Signup
                     </div>
 
-                </div>
+                    <div class="modal-body" style="background-color: #f7af93;">
+                        <form id="signupForm">
+                            <div class="form-floating">
+                                <input type="text" id="sname" name="sname" class="form-control" placeholder="Name"
+                                    autofocus required />
+                                <label for="name" class="form-label">Name</label>
+                                <br />
+                            </div>
+                            <div class="form-floating">
+                                <input type="email" id="semail" name="Email" class="form-control" placeholder="Email"
+                                    required />
+                                <label for="email" class="form-label">Email</label>
+                                <br />
+                            </div>
 
+                            <div class="form-floating">
+                                <input type="password" id="spassword" name="Password" class="form-control"
+                                    placeholder="Enter Password" required />
+                                <label for="password" class="form-label">Password</label>
+                                <br />
+                            </div>
 
-            </div>
-        </div>
-    </div>
+                        </form>
+                        <div class="modal-footer" style="background-color: #f7af93">
+                            <button class="btn btn-outline-success" type="submit" form="signupForm">Signup</button>
 
-    <!-- login Modal -->
-    <div class="modal fade" id="loginModal">
-
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-
-                <div class="modal-header" style="background-color: #e94c0e;">
-                    Login
-                </div>
-
-                <div class="modal-body" style="background-color: #f7af93;">
-                    <form id="loginForm">
-
-                        <div class="form-floating">
-                            <input type="email" id="lemail" name="Email" class="form-control" placeholder="Email"
-                                required />
-                            <label for="email" class="form-label">Email</label>
-                            <br />
+                            <button class="btn btn-outline-danger" data-bs-dismiss="modal" data-bs-target="#modal"
+                                id="signupModalClose">Close</button>
                         </div>
 
-                        <div class="form-floating">
-                            <input type="password" id="lpassword" name="Password" class="form-control"
-                                placeholder="Enter Password" required />
-                            <label for="password" class="form-label">Password</label>
-                            <br />
-                        </div>
-
-                    </form>
-                    <div class="modal-footer" style="background-color: #f7af93">
-                        <button class="btn btn-outline-success" type="submit" form="loginForm">Login</button>
-
-                        <button class="btn btn-outline-danger" data-bs-dismiss="modal" data-bs-target="#modal"
-                            id="loginModalClose">Close</button>
                     </div>
 
+
                 </div>
-
-
             </div>
         </div>
+
+        <!-- login Modal -->
+        <div class="modal fade" id="loginModal">
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header" style="background-color: #e94c0e;">
+                        Login
+                    </div>
+
+                    <div class="modal-body" style="background-color: #f7af93;">
+                        <form id="loginForm">
+
+                            <div class="form-floating">
+                                <input type="email" id="lemail" name="Email" class="form-control" placeholder="Email"
+                                    required />
+                                <label for="email" class="form-label">Email</label>
+                                <br />
+                            </div>
+
+                            <div class="form-floating">
+                                <input type="password" id="lpassword" name="Password" class="form-control"
+                                    placeholder="Enter Password" required />
+                                <label for="password" class="form-label">Password</label>
+                                <br />
+                            </div>
+
+                        </form>
+                        <div class="modal-footer" style="background-color: #f7af93">
+                            <button class="btn btn-outline-success" type="submit" form="loginForm">Login</button>
+
+                            <button class="btn btn-outline-danger" data-bs-dismiss="modal" data-bs-target="#modal"
+                                id="loginModalClose">Close</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- logout Modal -->
+        <div class="modal fade" id="logoutModal">
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+
+
+                    <div class="modal-body" style="background-color: #f7af93;">
+                        <H4>ARE YOU SURE YOU WANT TO LOGOUT ?</H4>
+                    </div>
+
+                    <div class="modal-footer" style="background-color: #f7af93">
+                        <a class="btn btn-outline-secondary" href="/home" id="logoutYes">YES</a>
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                            data-bs-target="#modal">NO</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- profile Modal -->
+        <div class="modal fade" id="profileModal">
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header" style="background-color: #e94c0e;">
+                        Profile
+                    </div>
+
+                    <div class="modal-body" style="background-color: #f7af93;" id="profileInfo">
+
+                    </div>
+                    <div class="modal-footer" style="background-color: #f7af93">
+                        <button class="btn btn-outline-success" id="editProfileModalLauncher" data-bs-toggle="modal"
+                            data-bs-target="#editProfileModal">Edit</button>
+
+                        <button class="btn btn-outline-danger" data-bs-dismiss="modal" data-bs-target="#modal"
+                            id="profileModalClose">Close</button>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- profile info edit Modal -->
+        <div class="modal fade" id="editProfileModal">
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-header" style="background-color: #e94c0e;">
+                        Edit Profile
+                    </div>
+
+                    <div class="modal-body" style="background-color: #f7af93;">
+                        <form id="editProfileInfoForm">
+                            <div class="form-floating">
+                                <input type="text" id="pName" name="pname" class="form-control" placeholder="Name"
+                                    autofocus required />
+                                <label for="name" class="form-label">Name</label>
+                                <br />
+                            </div>
+
+                            <div class="form-floating">
+                                <input type="email" id="pEmail" name="Email" class="form-control" placeholder="Email"
+                                    required />
+                                <label for="email" class="form-label">Email</label>
+                                <br />
+                            </div>
+
+                            <div class="form-floating">
+                                <input type="text" id="pAddress" name="paddress" class="form-control"
+                                    placeholder="Address" required />
+                                <label for="name" class="form-label">Address</label>
+                                <br />
+                            </div>
+
+                        </form>
+                        <p id='editInfoErrorMessage' style="color: red;"></p>
+                        <div class="modal-footer" style="background-color: #f7af93">
+                            <button class="btn btn-outline-success" type="submit"
+                                form="editProfileInfoForm">Submit</button>
+
+                            <button class="btn btn-outline-danger" data-bs-dismiss="modal" data-bs-target="#modal"
+                                id="editProfileModalClose">Close</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- logout Modal -->
+        <div class="modal fade" id="changePasswordModal">
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                    <div class="modal-body" style="background-color: #f7af93;">
+                        <form id="changePasswordForm">
+                            <p>Please enter your registered email address to reset your password</p>
+                            <div class="form-floating">
+                                <input type="email" id="cEmail" name="Email" class="form-control" placeholder="Email"
+                                    required />
+                                <label for="email" class="form-label">Email</label>
+                                <br />
+                            </div>
+
+
+
+                        </form>
+                        <div class="modal-footer" style="background-color: #f7af93">
+                            <button class="btn btn-outline-success" type="submit" form="changePasswordForm"
+                                id="changePasswordSubmit">Submit</button>
+
+                            <button class="btn btn-outline-danger" data-bs-dismiss="modal" data-bs-target="#modal"
+                                id="changePasswordClose">Close</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Alert message modal -->
+        <div class="modal fade" id="alertMessageModal">
+
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+
+
+                    <div class="modal-body" style="background-color: #f7af93;">
+                        <p><b id="alertMessage"></b></p>
+                    </div>
+
+                    <div class="modal-footer" style="background-color: #f7af93">
+                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                            data-bs-target="#modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
 
     <nav class="navbar navbar-expand-lg " style="background-color: #fab397;">
         <div class="container">
@@ -205,7 +365,7 @@
 
 
 
-    <script src="/js/shop/home.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -213,6 +373,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/shop/home.js"></script>
 </body>
 
 </html>

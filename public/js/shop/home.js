@@ -1,10 +1,54 @@
+
+
 const website = 'http://localhost:4000';
+const token = localStorage.getItem('userToken');
 
 const signupForm = document.getElementById('signupForm');
 signupForm.addEventListener('submit', signup);
 
 const login = document.getElementById("loginForm");
 login.addEventListener("submit", loginUser);
+
+const editInfo = document.getElementById("editProfileInfoForm");
+editInfo.addEventListener("submit", editProfileInfo);
+
+const editInfoShow = document.getElementById("editProfileModalLauncher");
+editInfoShow.addEventListener("click", () => {
+  const userInfo = parseJwt(token);
+  let address;
+  if (userInfo.address) {
+    address = userInfo.address;
+  }
+  else {
+    address = 'Please add address for placing order'
+  }
+
+  //showing info in edit profile modal
+  document.getElementById('pName').value = userInfo.name;
+  document.getElementById('pEmail').value = userInfo.email;
+  document.getElementById('pAddress').value = address;
+
+});
+
+const changePasswordForm = document.getElementById('changePasswordForm');
+changePasswordForm.addEventListener('submit', resetEmail);
+
+const logout = document.getElementById('logoutYes');
+logout.addEventListener('click', () => { localStorage.removeItem('userToken') });
+
+
+//code for the token
+function parseJwt(token) {
+  console.log('++++****++++++*****++++++++', token)
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
 
 async function signup(e) {
   try {
@@ -32,8 +76,9 @@ async function signup(e) {
     );
 
     document.getElementById('signupModalClose').click()
-    const modal = new bootstrap.Modal(document.getElementById('loginModal'))
-    modal.show()
+    document.getElementById('login').click();
+    // const modal = new bootstrap.Modal(document.getElementById('loginModal'))
+    // modal.show()
 
 
   } catch (err) {
@@ -65,24 +110,159 @@ async function loginUser(e) {
       `/home/loginCheck`,
       details
     );
+    let token = res.data.token
 
-    localStorage.setItem("userToken", res.data.token);
+    localStorage.setItem("userToken", token);
     document.getElementById('loginModalClose').click();
+    document.getElementById('alertMessage').innerHTML = res.data.message;
+    const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
+    alertModal.show();
+    afterLoginButtons(token);
 
-    //document.getElementById("email").value = "";
-    //document.getElementById("password").value = "";
   } catch (err) {
+    console.log(err)
     if (err.response.status < 500) {
-      alert(err.response.data.message);
+      document.getElementById('alertMessage').innerHTML = err.response.data.message;
+      const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
+      alertModal.show();
+      // alert(err.response.data.message);
     }
     else {
 
       document.body.innerHTML =
         document.body.innerHTML + `<h4 style="color: red;">${err}</h4>`;
-      console.log(err);
+      // console.log(err);
     }
   }
 
+}
+
+//after login actions
+function afterLoginButtons(token) {
+  const dropdown = document.getElementById('dropdown-menu');
+  dropdown.innerHTML = `  <button class="dropdown-item" id="profile" data-bs-toggle="modal"
+                                data-bs-target="#profileModal">Profile</button>
+                                <a class="dropdown-item" href="home/orders">Orders</a>
+                            <button class="dropdown-item" id='logout' data-bs-toggle="modal"
+                                data-bs-target="#logoutModal">Logout</button> `
+
+  showProfileInfo(token);
+}
+
+//showing profile info in profile modal
+function showProfileInfo(token) {
+  console.log(token)
+  const userInfo = parseJwt(token);
+  const profileInfo = document.getElementById('profileInfo')
+  let address;
+  if (userInfo.address) {
+    address = userInfo.address;
+  }
+  else {
+    address = 'Please add address for placing order'
+  }
+  profileInfo.innerHTML = `                        
+                        <p><b>Name</b> :${userInfo.name} </p>
+                        <p><b>Email</b> :${userInfo.email}</p>
+                        <p><b>Address</b> :${address}</p>
+                        <br>
+
+                        <button class="btn btn-primary"  data-bs-toggle="modal"
+                                data-bs-target="#changePasswordModal">Change Password</button>
+                        
+                        
+  `
+
+}
+//saving updated Profile info
+async function editProfileInfo(e) {
+  try {
+
+    e.preventDefault();
+
+    let name = document.getElementById("pName").value;
+    let email = document.getElementById("pEmail").value;
+    let address = document.getElementById("pAddress").value;
+
+    const details = {
+      Name: name,
+      Email: email,
+      Address: address,
+    };
+
+    if (name.trim() === "" || email.trim() === "" || address.trim() === "") {
+      documemt.getElementById('editInfoErrorMessage').innerHTML = 'Please enter valid information !'
+      return;
+    }
+
+
+    const res = await axios.post(
+      `/home/editUserInfo`,
+      details,
+      { headers: { "Authorization": token } }
+    );
+
+    document.getElementById('editProfileModalClose').click()
+    document.getElementById('alertMessage').innerHTML = res.data.message;
+    const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
+    alertModal.show();
+
+    // const modal = new bootstrap.Modal(document.getElementById('loginModal'))
+    // modal.show()
+
+
+  } catch (err) {
+    document.getElementById('alertMessage').innerHTML = res.data.message;
+    const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
+    alertModal.show();
+    console.log(err)
+  }
+}
+
+//for sending reset Email;
+async function resetEmail(e) {
+  try {
+    e.preventDefault()
+    const email = document.getElementById('cEmail').value;
+    if (email.trim() === "") {
+      return
+    }
+    const details = {
+      email: email
+    }
+
+    const res = await axios.post(`/home/resetEmail`, details, { headers: { "Authorization": token } });
+    document.getElementById('changePasswordClose').click();
+    document.getElementById('alertMessage').innerHTML = res.data.message;
+    const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
+    alertModal.show();
+
+
+
+
+  }
+  catch (err) {
+    document.getElementById('alertMessage').innerHTML = err.response.data.message;
+    const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
+    alertModal.show();
+    console.log(err);
+
+  }
+
+
+
+}
+
+//function for handling debouncing
+function debounce(cb, delay) {
+  let timer;
+
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      cb.apply(this, args)
+    }, delay)
+  }
 }
 
 
@@ -132,27 +312,73 @@ async function showProducts(category, page) {
         <a href="/home/viewProduct?id=${product._id}"><img src="${product.image}" alt="${product.title}" class="product-img"></a>
         <div class="product-info">
             <h2 class="product-title">${product.title}</h2>
-            <p class="product-price">Rs.${product.price.toFixed(2)}</p>
+            <p class="product-price">₹ ${product.originalPrice.toFixed(2)}</p>
             <a class="add-to-cart" id="${product._id}">Add to Cart</a>
         </div>
     </div>`
 
       ).join("");
 
-    const addButtons = Array.from(document.getElementsByClassName('add-to-cart'));
-    addButtons.forEach((element) => {
-      element.addEventListener('click', async function () {
-        this.innerHTML = "Added";
-        this.style.backgroundColor = 'Blue';
-        // console.log(this.id);
 
-        await axios.post(`/addToCart?id=${this.id}`)
-      });
+    //Adding eventListener to add to cart buttons 
+    const addButtons = Array.from(document.getElementsByClassName('add-to-cart'));
+    async function addToCartFunction(e) {
+      const button = e.target;
+      try {
+
+        if (!token) {
+          document.getElementById('alertMessage').innerHTML = 'Please Login for placing order';
+          const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
+          alertModal.show();
+          console.log(typeof this.id);
+          return
+
+        }
+
+        const productId = button.id;
+
+        if (button.disabled) {
+          return
+        }
+
+        button.disabled = true;
+
+        const res = await axios.post(`/home/addToCart?id=${productId}&&quantity=1`, null, { headers: { "Authorization": token } });
+
+        if (res.status === 200) {
+          this.innerHTML = "Added";
+          this.style.backgroundColor = '#2885ee';
+          const cartIcon = document.getElementById('cart-icon');
+          let total = Number(cartIcon.getAttribute('data-quantity')) + 1;
+          cartIcon.setAttribute('data-quantity', total);
+
+        }
+        else {
+          throw new Error('Failed to add to cart')
+        }
+
+      }
+      catch (err) {
+        document.body.innerHTML =
+          document.body.innerHTML + `<h4 style="color: red;">${err.message}</h4>`;
+        console.log(err);
+
+      }
+      finally {
+        button.disabled = false;
+      }
+
+
+    }
+
+    // const debounceHandleClick = debounce(addToCartFunction, 1000);
+    //Add product to cart
+    addButtons.forEach((element) => {
+      element.addEventListener('click', addToCartFunction);
     })
 
 
-    // addToCart = Array.from(addToCart);
-    // console.log('Add to cart', addToCart);
+
 
     if (window.location.href !== `${website}/home`) {
       showPagination(res)
@@ -170,6 +396,22 @@ async function showProducts(category, page) {
   }
 
 }
+
+async function updateCartIcon() {
+  try {
+    const res = await axios.get('/home/getCart', { headers: { "Authorization": token } });
+    const cartQuantity = res.data.products.length;
+
+    const cartIcon = document.getElementById('cart-icon');
+    cartIcon.setAttribute('data-quantity', cartQuantity);
+
+  }
+  catch (err) {
+    console.log(err)
+  }
+}
+
+
 
 function showPagination(res) {
   const { currentPage, hasNextPage, nextPage, hasPreviousPage, previousPage } = res.data;
@@ -228,6 +470,11 @@ function showPagination(res) {
 window.addEventListener('DOMContentLoaded', async () => {
   try {
 
+    if (token) {
+      afterLoginButtons(token);
+      updateCartIcon()
+    }
+
     if (window.location.href === `${website}/home`) {
       showProducts('Featured');
       console.log('***********')
@@ -263,5 +510,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
 })
+
+
+
 
 

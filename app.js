@@ -2,7 +2,7 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
@@ -19,7 +19,7 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs', 'acces
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
-app.use(helmet({ contentSecurityPolicy: false }));
+// app.use(helmet({ contentSecurityPolicy: false }));
 app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(express.static(path.join(__dirname, "public")));

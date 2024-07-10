@@ -149,6 +149,7 @@ async function removeFromCart(e) {
 
 async function cartPayment(e) {
     try {
+        const token = localStorage.getItem('userToken');
         const res = await axios.get(`/home/cartPayment`, { headers: { "Authorization": token } });
         console.log(res);
 
@@ -164,6 +165,7 @@ async function cartPayment(e) {
                 }, { headers: { "Authorization": token } })
 
                 alert('Order placed successfully !');
+                window.location.href = '/home/cart'
 
             }
 

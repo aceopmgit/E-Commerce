@@ -40,6 +40,20 @@ exports.cart = (req, res, next) => {
     res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'cart.html'));
 }
 
+exports.orders = (req, res, next) => {
+    res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'orders.html'));
+}
+
+exports.viewOrder = (req, res, next) => {
+
+    res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'viewOrder.html'));
+}
+exports.viewAllSeachProducts = (req, res, next) => {
+
+    res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'viewAllSearchProducts.html'));
+}
+
+
 async function ProductCheck() {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -744,17 +758,6 @@ exports.removeFromCart = async (req, res, next) => {
         const id = req.query.productId;
         console.log(id);
         const products = await req.user.deleteItemFromCart(id);
-        // console.log(products, Array.isArray(products.cart.items))
-        // await req.user.populate('cart.items.productId')
-        //         let products = req.user.cart.items;
-
-
-        // products.forEach((e) => {
-        //     console.log(e)
-        //     e.productId.currentPrice = e.productId.originalPrice * e.quantity;
-        // })
-        // // console.log('++++++++products', products);
-        // console.log('++++++++++///////////+++++++++++', result.cart.items);
 
         await session.commitTransaction();
         res.status(200).json({ success: true, products: products.cart.items });
@@ -781,13 +784,14 @@ exports.cartPayment = async (req, res, next) => {
         })
         let x = await req.user.populate('cart.items.productId')
         let products = req.user.cart.items;
-        let total = 0
 
-        products.forEach((e) => {
-            total += e.productId.currentPrice
-            // e.productId.currentPrice = e.productId.originalPrice * e.quantity;
-        })
-        console.log('************+++++++++++++****************', products, total)
+
+        let total = products.reduce((acc, curr) => {
+            return acc + (curr.productId.currentPrice * curr.quantity)
+        }, 0)
+
+
+        // console.log('************+++++++++++++****************', products, total)
 
         const amount = total * 100;
         rzp.orders.create({ amount, currency: "INR" }, async (err, order) => {
@@ -795,7 +799,8 @@ exports.cartPayment = async (req, res, next) => {
                 if (err) {
                     throw new Error(JSON.stringify(err));
                 }
-                const o = new Order({ orderId: order.id, status: 'PENDING', userId: req.user._id, products: products });
+                const o = new Order({ orderId: order.id, status: 'PENDING', userId: req.user._id, products: products, orderAmount: (amount / 100) });
+                console.log('*************order***************', o.products)
                 await o.save();
                 return res.status(201).json({ order, key_id: rzp.key_id });
             } catch (err) {
@@ -824,7 +829,7 @@ exports.updateTransaction = async (req, res, next) => {
     session.startTransaction();
     try {
         const { order_id, payment_id, status } = req.body;
-
+        console.log('********************update*********************************', req.body)
         const updateOrder = Order.updateOne(
             { orderId: order_id },
             { $set: { paymentId: payment_id, status: status } },
@@ -852,3 +857,117 @@ exports.updateTransaction = async (req, res, next) => {
         session.endSession();
     }
 };
+
+
+
+exports.getOrders = async (req, res, next) => {
+
+    try {
+        // let x = await req.user.populate('cart.items.productId')
+        let x = await Order.find({ userId: req.user._id, status: "SUCCESSFUL" }).populate('products.productId');
+        // let products = req.user.cart.items;
+        const products = x.map((e) => {
+            return { products: e.products, amount: e.orderAmount, orderId: e._id }
+        })
+        // console.log('**********orders******', x[0].products, x, products[])
+        console.log('orderAmt****************', x, x.orderAmount)
+
+        // products.forEach((e) => {
+        //     e.productId.currentPrice = e.productId.originalPrice * e.quantity;
+        // })
+
+
+        res.status(200).json({ success: true, products: products, total: x.orderAmount });
+
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({
+            Error: err,
+        });
+    }
+
+
+}
+
+exports.getOrder = async (req, res, next) => {
+
+    try {
+        let id = req.query.id;
+
+        const order = await Order.findOne({ _id: id }).populate('products.productId');
+
+        console.log('*****Order******', order.products[0].productId)
+
+        order.products.forEach((e) => {
+            e.productId.currentPrice *= e.quantity
+        })
+        console.log(order)
+
+
+
+        // const product = await Product.find({ _id: id });
+        res.status(201).json({
+            order: order,
+            succcess: true,
+        });
+
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({
+            Error: err,
+        });
+    }
+
+
+}
+
+exports.seachProducts = async (req, res, next) => {
+
+    try {
+        let search = req.query.search;
+        const regex = new RegExp(search, 'i')
+        const products = await Product.find({ title: { $regex: regex } })
+
+        //sort the arrays according to most number of matched characters
+        const sortedResult = products.sort((a, b) => {
+            const aMatches = a.title.match(regex).join('').length;
+            const bMatches = b.title.match(regex).join('').length;
+            return bMatches - aMatches
+        })
+        console.log('8888888888888888888', products.length, sortedResult.length);
+
+
+        // console.log('*******searchresults****************', products);
+        res.status(201).json({
+            products: products,
+            succcess: true,
+        });
+        // const order = await Order.findOne({ _id: id }).populate('products.productId');
+
+        // console.log('*****Order******', order.products[0].productId)
+
+        // order.products.forEach((e) => {
+        //     e.productId.currentPrice *= e.quantity
+        // })
+        // console.log(order)
+
+
+
+        // // const product = await Product.find({ _id: id });
+        // res.status(201).json({
+        //     order: order,
+        //     succcess: true,
+        // });
+
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({
+            Error: err,
+        });
+    }
+
+
+}

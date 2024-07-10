@@ -1,5 +1,3 @@
-
-
 const website = 'http://localhost:4000';
 const token = localStorage.getItem('userToken');
 
@@ -37,6 +35,8 @@ const logout = document.getElementById('logoutYes');
 logout.addEventListener('click', () => { localStorage.removeItem('userToken') });
 
 
+
+
 //code for the token
 function parseJwt(token) {
   console.log('++++****++++++*****++++++++', token)
@@ -48,7 +48,6 @@ function parseJwt(token) {
 
   return JSON.parse(jsonPayload);
 }
-
 
 async function signup(e) {
   try {
@@ -114,10 +113,12 @@ async function loginUser(e) {
 
     localStorage.setItem("userToken", token);
     document.getElementById('loginModalClose').click();
-    document.getElementById('alertMessage').innerHTML = res.data.message;
-    const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
-    alertModal.show();
-    afterLoginButtons(token);
+    alert(res.data.message);
+    window.location.reload();
+    // document.getElementById('alertMessage').innerHTML = res.data.message;
+    // const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
+    // alertModal.show();
+    // afterLoginButtons(token);
 
   } catch (err) {
     console.log(err)
@@ -253,19 +254,6 @@ async function resetEmail(e) {
 
 }
 
-//function for handling debouncing
-function debounce(cb, delay) {
-  let timer;
-
-  return function (...args) {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      cb.apply(this, args)
-    }, delay)
-  }
-}
-
-
 
 //show products on page
 async function showProducts(category, page) {
@@ -326,7 +314,10 @@ async function showProducts(category, page) {
       const button = e.target;
       try {
 
+        const token = localStorage.getItem('userToken');
+
         if (!token) {
+          console.log(token)
           document.getElementById('alertMessage').innerHTML = 'Please Login for placing order';
           const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
           alertModal.show();
@@ -346,8 +337,8 @@ async function showProducts(category, page) {
         const res = await axios.post(`/home/addToCart?id=${productId}&&quantity=1`, null, { headers: { "Authorization": token } });
 
         if (res.status === 200) {
-          this.innerHTML = "Added";
-          this.style.backgroundColor = '#2885ee';
+          button.innerHTML = "Added";
+          button.style.backgroundColor = '#2885ee';
           const cartIcon = document.getElementById('cart-icon');
           let total = Number(cartIcon.getAttribute('data-quantity')) + 1;
           cartIcon.setAttribute('data-quantity', total);
@@ -510,6 +501,98 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 
 })
+
+//implementing search functionality;
+
+//function for handling debouncing
+function debounce(cb, delay) {
+  let timer;
+
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      cb.apply(this, args)
+    }, delay)
+  }
+}
+
+async function searchProducts(query) {
+  try {
+    const res = await axios.get(`/home/seachProducts?search=${query}`);
+    // console.log(res)
+    displayResult(res);
+
+
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+function displayResult(res) {
+  const result = document.getElementById('results');
+  result.innerHTML = "";
+  // console.log(res.data.products);
+  const products = res.data.products
+  //limiting the number of searches shown
+  let limitedProducts;
+  if (products.length > 10) {
+    limitedProducts = products.slice(0, 10)
+  }
+  else {
+    limitedProducts = products;
+  }
+  result.innerHTML = limitedProducts.map((e) => `
+  <div class="result-item">
+        <a href="/home/viewProduct?id=${e._id}" class="text-reset text-decoration-none">${e.title}</a>
+    </div>
+  `
+  ).join("");
+  result.style.visibility = "visible"
+}
+
+const searchBox = document.getElementById('searchBox');
+searchBox.addEventListener('input', debounce((e) => {
+  const query = e.target.value;
+  if (query.trim().length > 0) {
+    searchProducts(query)
+  }
+  else {
+    document.getElementById('results').innerHTML = "";
+  }
+
+}, 400))
+
+//for showing all search products
+const searchBtn = document.getElementById('seachBtn');
+searchBtn.addEventListener('click', (e) => {
+  e.preventDefault()
+  const searchValue = document.getElementById('searchBox').value;
+  console.log(searchValue);
+  if (searchValue.trim().length === 0) {
+    return
+  }
+  const destinationUrl = `/home/viewAllSeachProducts?search=${searchValue}`;
+
+  window.location.href = destinationUrl;
+  // console.log(e.target.parentElement)
+  // searchBtn.href = `/home/viewAllSeachProducts?search=${searchValue}`
+  // console.log(searchBtn)
+  // searchBtn.click();
+  // e.target.parentElement.click();
+})
+
+
+//hide result when clicked outside
+document.addEventListener('click', (event) => {
+  const isClickInside = document.getElementById('results').contains(event.target);
+
+  if (!isClickInside) {
+    document.getElementById('results').style.visibility = 'hidden';
+  }
+
+})
+
+
 
 
 

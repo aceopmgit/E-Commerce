@@ -16,7 +16,7 @@
 
     <!-- box icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <title>View Product</title>
+    <title>View Order</title>
 </head>
 
 <body class="home">
@@ -30,13 +30,7 @@
                         <span>MYCART.com</span>
                     </a>
                 </div>
-                <div class="d-flex align-items-center">
 
-                    <a href="/home/cart">
-                        <i class='bx bx-shopping-bag' id="cart-icon" data-quantity="0"></i>
-                        <!-- <i class='bx bxs-cart' ></i> -->
-                    </a>
-                </div>
 
             </div>
         </div>
@@ -57,27 +51,28 @@
             </div>
         </div>
     </div> -->
-    <!-- Alert message modal -->
-    <div class="modal fade" id="alertMessageModal">
 
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+    <section class="order-container container">
+        <a href="/home/orders" class="back-homepage">
+            <i class='bx bx-chevron-left'></i>
+            <span>Back to Orders</span>
+        </a>
+        <h2 class="order-s-title">Your Order</h2>
+        <div class="order-box">
+            <div class="order-data" id="orderData">
+                <div id="orderItems"></div>
+                <div class="text-right">
+                    <div class="order-t" id="order-t">
+                        <b>
+                            <div id="orderTotal"></div>
+                        </b>
 
-
-
-                <div class="modal-body" style="background-color: #f7af93;">
-                    <p><b id="alertMessage"></b></p>
+                    </div>
                 </div>
 
-                <div class="modal-footer" style="background-color: #f7af93">
-                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                        data-bs-target="#modal">OK</button>
-                </div>
             </div>
         </div>
-    </div>
-
-    <div class="container d-flex justify-content-center align-items-center min-vh-100" id="productTile"></div>
+    </section>
 
     <br>
 
@@ -85,7 +80,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="/js/shop/viewProduct.js"></script>
+    <script src="/js/shop/viewOrder.js"></script>
 
 
 </body>

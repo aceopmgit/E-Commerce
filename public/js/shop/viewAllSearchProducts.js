@@ -1,35 +1,39 @@
 const token = localStorage.getItem('userToken');
 const urlParams = new URLSearchParams(window.location.search);
-const productId = urlParams.get('id');
+const search = urlParams.get('search');
 
-async function showProduct(id) {
+console.log(search)
+
+//show products on page
+async function showProducts(category, page) {
     try {
-        const res = await axios.get(`/home/getProduct?id=${id}`);
+        const productsList = document.getElementById('productList');
+        const res = await axios.get(`/home/seachProducts?search=${search}`);
+
+        const products = res.data.products
+        console.log(products.length, products)
+        productsList.innerHTML = products
+            .map((product) =>
+                `
+      <div class="product">
+          <a href="/home/viewProduct?id=${product._id}"><img src="${product.image}" alt="${product.title}" class="product-img"></a>
+          <div class="product-info">
+              <h2 class="product-title">${product.title}</h2>
+              <p class="product-price">₹ ${product.originalPrice.toFixed(2)}</p>
+              <a class="add-to-cart" id="${product._id}">Add to Cart</a>
+          </div>
+      </div>`
+
+            ).join("");
 
 
-        const productTile = document.getElementById('productTile');
-        const product = res.data.product[0];
-        console.log(product)
-
-        document.getElementsByTagName('title').innerHtml = product.title;
-
-
-        productTile.innerHTML = `
-        <div class="product">
-        <img src="${product.image}" alt="${product.title}" class="product-img">
-        <div class="product-info">
-            <h2 class="product-title">${product.title}</h2>
-            <p class="product-price">₹ ${product.originalPrice}</p>
-            <a class="add-to-cart" id="${product._id}">Add to Cart</a>
-        </div>
-        </div>`
-
-        const addButton = document.getElementById(product._id);
-        addButton.addEventListener('click', async (e) => {
-
+        //Adding eventListener to add to cart buttons 
+        const addButtons = Array.from(document.getElementsByClassName('add-to-cart'));
+        async function addToCartFunction(e) {
             const button = e.target;
             try {
 
+                const token = localStorage.getItem('userToken');
 
                 if (!token) {
                     console.log(token)
@@ -52,7 +56,6 @@ async function showProduct(id) {
                 const res = await axios.post(`/home/addToCart?id=${productId}&&quantity=1`, null, { headers: { "Authorization": token } });
 
                 if (res.status === 200) {
-                    console.log(button)
                     button.innerHTML = "Added";
                     button.style.backgroundColor = '#2885ee';
                     const cartIcon = document.getElementById('cart-icon');
@@ -74,33 +77,23 @@ async function showProduct(id) {
             finally {
                 button.disabled = false;
             }
+
+
+        }
+
+        // const debounceHandleClick = debounce(addToCartFunction, 1000);
+        //Add product to cart
+        addButtons.forEach((element) => {
+            element.addEventListener('click', addToCartFunction);
         })
-        console.log(addButton)
-
-    } catch (err) {
-        document.body.innerHTML =
-            document.body.innerHTML + `<h4 style="color: red;">${err.message}</h4>`;
-    }
-}
-async function updateCartIcon() {
-    try {
-        const res = await axios.get('/home/getCart', { headers: { "Authorization": token } });
-        const cartQuantity = res.data.products.length;
-
-        const cartIcon = document.getElementById('cart-icon');
-        cartIcon.setAttribute('data-quantity', cartQuantity);
 
     }
     catch (err) {
-        console.log(err)
+        document.body.innerHTML =
+            document.body.innerHTML + `<h4 style="color: red;">${err.message}</h4>`;
+        console.log(err);
     }
+
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-    if (token) {
-        updateCartIcon();
-    }
-    showProduct(productId);
-
-})
-
+showProducts();

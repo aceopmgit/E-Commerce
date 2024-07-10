@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="icon" href="../public/images/ecommerce_icon.png" sizes="32x32" type="image/png"> -->
+    <!-- <link rel="icon" type="image/png" sizes="16x16" href="../public/images/ecommerce_icon.png"> -->
     <!-- link to css  -->
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -12,7 +14,7 @@
 
     <!-- box icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <title>myCart</title>
+    <title>Orders</title>
 </head>
 
 <body>
@@ -27,34 +29,7 @@
                     </a>
 
                 </div>
-                <div class="d-flex align-items-center search-container">
-                    <input type="text" class="form-control mr-6" placeholder="Search products..." id="searchBox">
-                    <button class="btn" id="seachBtn"><img
-                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAv5JREFUWEfVl1mojVEUx3/XWAp54xozRMjNi4QHUaYoD4iMxeVFoUSUlGRMJCRkKFIohVAyPSBPFGXIFJFQlIyZ9l/ruN/dfed8e1/nHMd6Oef7zlr//T9r3lVUmFRVGB/+W0LDgBHAQKAr0BZ4CTwCrrn3Z4HLxfB2lodqgO3A4IDDzgPzgbsBunlVChGaDuwGmkcc8AmYBJyKsKmnmo/QBOBoQvObC9NO4CJwD3hsoesFKJxzgcYJfYX3XENIpRHqDNwCWhrgQ2AMcL/AAX2BM0AH03kN9HYhfBNLKo3QcWC8AckbQwKBReYq0NFsdwHz/pbQAOC6gXwFegJPIkBVBDfgdzv5CXS3SgyG8D20BVhg1vq+KBipTvGwq7TJ9rgE2BiD4RNSycorkkHWY2LwpDvR5c8RM7oADI8B8Am9A1obQCvgfQyY6XaxKtTjU0BFEiw+IeVNU7NuAnwPRqpTVN/6bI/qSy1iMHxCL4B2BqBPjYdYqQaem5HaR78YAJ/QFcsdYYy2GRWDJ91xwAkzOgRMiwHwCa0AVhnAHvdPa2PATPcgMNW+L3Uh2xCD4RPSKLhjAD+s26o5hor60E1T/gL0AJ6FGksvrVMfcM1shoE8sEn/KgC0k3Xq9qa72hWFPB4laYSUlLeBNoakQToqY5b1B07bniQzFUM34GMUmzweEsZY4GQCTNN+B3ApMe3VQDVAhwJzPKxjbuTMAj4Ui5BwpgD7gWYRoOo/yiFtlm8BjZ+tgBpukGRtjH2AbeaFLECNCVWlvKncyzVYhW19onoL4mQRyhlrCRuZ2KmVZ40sR7RL7/MWOi1z/uqhBFeiF4VQFo7/uypOF4DkFimdlVmeCvVQLCHprwGWpRiqUaphpkopCQlbl4TZKSerWPRezbeelJKQDlKe7XXryMwUUnqvdqHN8o+UmlDuoM2u9BemkNKVKXm7KetVWqvs4gSptcDycofMP2+dJbSIbUrL6nKFLHm2Ro1GUNmrrCGtoqw5FETwX4SsILGKI/QL1St7JZXUgxYAAAAASUVORK5CYII=" /></button>
-                </div>
                 <div class="d-flex align-items-center">
-                    <div class="dropdown mr-3">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            style="background-color:#e94c0e; color:black;border: none;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor"
-                                class="bi bi-person-circle" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                <path fill-rule="evenodd"
-                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdown-menu">
-                            <!-- <a class="dropdown-item" href="#">New User ? Signup</a>
-                            <a class="dropdown-item" href="#">Login</a> -->
-
-                            <button class="dropdown-item" id="signup" data-bs-toggle="modal"
-                                data-bs-target="#signupModal">New User ? Signup</button>
-                            <button class="dropdown-item" id='login' data-bs-toggle="modal"
-                                data-bs-target="#loginModal">Login</button>
-
-                        </div>
-                    </div>
 
                     <a href="/home/cart">
                         <i class='bx bx-shopping-bag' id="cart-icon" data-quantity="0"></i>
@@ -63,10 +38,10 @@
                 </div>
             </div>
         </div>
+        </div>
 
 
     </header>
-
 
     <div id="modals">
         <!-- Signup Modal -->
@@ -327,10 +302,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/home/men">Men</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item ">
                         <a class="nav-link" href="/home/women">Women</a>
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="/home/kids">Kids <span class="sr-only">(current)</span></a>
                     </li>
 
@@ -338,31 +313,36 @@
             </div>
         </div>
     </nav>
+    <section class="order-container container">
+        <a href="/home" class="back-homepage">
+            <i class='bx bx-chevron-left'></i>
+            <span>Back to Home</span>
+        </a>
+        <h2 class="order-s-title">Orders</h2>
+        <div class="order-box">
+            <div class="order-data" id="orderData">
+                <div id="orderItems"></div>
+                <div class="text-right">
+                    <div class="order-t" style="visibility: hidden;" id="order-t">
 
-    <section class="home" id="home">
-        <div class="home-img container">
-            <img src="/extras/home.png" alt="">
+
+                    </div>
+                </div>
+
+            </div>
         </div>
     </section>
-    <section class="products container" id="products">
-        <h2 class="heading">Discover Products</h2>
-        <div class="product-container" id="productList"></div>
-        <br>
-        <br>
-
-        <ul class="pagination justify-content-center" id="rpagination"></ul>
-
-        </div>
-    </section>
 
 
 
-    <script src="/js/shop/home.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/shop/orders.js"></script>
 </body>
 
 </html>

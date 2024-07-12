@@ -8,7 +8,7 @@ console.log(search)
 async function showProducts(category, page) {
     try {
         const productsList = document.getElementById('productList');
-        const res = await axios.get(`/home/seachProducts?search=${search}`);
+        const res = await axios.get(`/seachProducts?search=${search}`);
 
         const products = res.data.products
         console.log(products.length, products)
@@ -16,7 +16,7 @@ async function showProducts(category, page) {
             .map((product) =>
                 `
       <div class="product">
-          <a href="/home/viewProduct?id=${product._id}"><img src="${product.image}" alt="${product.title}" class="product-img"></a>
+          <a href="/viewProduct?id=${product._id}"><img src="${product.image}" alt="${product.title}" class="product-img"></a>
           <div class="product-info">
               <h2 class="product-title">${product.title}</h2>
               <p class="product-price">₹ ${product.originalPrice.toFixed(2)}</p>
@@ -53,7 +53,7 @@ async function showProducts(category, page) {
 
                 button.disabled = true;
 
-                const res = await axios.post(`/home/addToCart?id=${productId}&&quantity=1`, null, { headers: { "Authorization": token } });
+                const res = await axios.post(`/addToCart?id=${productId}&&quantity=1`, null, { headers: { "Authorization": token } });
 
                 if (res.status === 200) {
                     button.innerHTML = "Added";

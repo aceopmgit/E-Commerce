@@ -25,7 +25,7 @@ app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 const port = process.env.PORT || 4000
 
-app.use('/home', homeRoutes);
+app.use(homeRoutes);
 app.use('/admin', adminRoutes);
 app.use(errorRoutes);
 console.log(process.env.CONNECTION_STRING)

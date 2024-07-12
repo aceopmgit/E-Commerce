@@ -4,7 +4,7 @@ const productId = urlParams.get('id');
 
 async function showProduct(id) {
     try {
-        const res = await axios.get(`/home/getProduct?id=${id}`);
+        const res = await axios.get(`/getProduct?id=${id}`);
 
 
         const productTile = document.getElementById('productTile');
@@ -49,7 +49,7 @@ async function showProduct(id) {
 
                 button.disabled = true;
 
-                const res = await axios.post(`/home/addToCart?id=${productId}&&quantity=1`, null, { headers: { "Authorization": token } });
+                const res = await axios.post(`/addToCart?id=${productId}&&quantity=1`, null, { headers: { "Authorization": token } });
 
                 if (res.status === 200) {
                     console.log(button)

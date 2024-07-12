@@ -2,7 +2,7 @@ const token = localStorage.getItem('userToken');
 async function showOrders() {
     const orderItemsElement = document.getElementById('orderItems');
     try {
-        const res = await axios.get('/home/getOrders', { headers: { "Authorization": token } });
+        const res = await axios.get('/getOrders', { headers: { "Authorization": token } });
         // console.log(res.data)
         const orders = res.data.products;
 
@@ -41,7 +41,7 @@ async function showOrders() {
                          <h2 class="order-item-title">${e.orderName}</h2>
                      </div>
                      <h2 class="order-item-price">₹ <span id="order_${e.orderId}" data-price="${e.orderAmount}">${e.orderAmount}</span></h2>
-                     <a href="/home/viewOrder?id=${e.orderId}" class="btn btn-success">View Order</a>
+                     <a href="/viewOrder?id=${e.orderId}" class="btn btn-success">View Order</a>
                  </div>
              `)
                 .join("");

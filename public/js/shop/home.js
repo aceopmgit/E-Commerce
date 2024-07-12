@@ -71,7 +71,7 @@ async function signup(e) {
 
 
     const res = await axios.post(
-      `/home/addUser`,
+      `/addUser`,
       details
     );
 
@@ -107,7 +107,7 @@ async function loginUser(e) {
 
   try {
     const res = await axios.post(
-      `/home/loginCheck`,
+      `/loginCheck`,
       details
     );
     let token = res.data.token
@@ -199,7 +199,7 @@ async function editProfileInfo(e) {
 
 
     const res = await axios.post(
-      `/home/editUserInfo`,
+      `/editUserInfo`,
       details,
       { headers: { "Authorization": token } }
     );
@@ -233,7 +233,7 @@ async function resetEmail(e) {
       email: email
     }
 
-    const res = await axios.post(`/home/resetEmail`, details, { headers: { "Authorization": token } });
+    const res = await axios.post(`/resetEmail`, details, { headers: { "Authorization": token } });
     document.getElementById('changePasswordClose').click();
     document.getElementById('alertMessage').innerHTML = res.data.message;
     const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
@@ -261,7 +261,7 @@ async function showProducts(category, page) {
   try {
     let res;
     if (page) {
-      res = await axios.get(`/home/get${category}Products?page=${page}`);
+      res = await axios.get(`/get${category}Products?page=${page}`);
       if (category === 'Men') {
         localStorage.setItem('mPage', page)
         localStorage.removeItem('wPage');
@@ -281,7 +281,7 @@ async function showProducts(category, page) {
     }
     else {
 
-      res = await axios.get(`/home/get${category}Products`);
+      res = await axios.get(`/get${category}Products`);
       localStorage.removeItem('wPage');
       localStorage.removeItem('mPage');
       localStorage.removeItem('kPage');
@@ -298,7 +298,7 @@ async function showProducts(category, page) {
       .map((product) =>
         `
     <div class="product">
-        <a href="/home/viewProduct?id=${product._id}"><img src="${product.image}" alt="${product.title}" class="product-img"></a>
+        <a href="/viewProduct?id=${product._id}"><img src="${product.image}" alt="${product.title}" class="product-img"></a>
         <div class="product-info">
             <h2 class="product-title">${product.title}</h2>
             <p class="product-price">₹ ${product.originalPrice.toFixed(2)}</p>
@@ -335,7 +335,7 @@ async function showProducts(category, page) {
 
         button.disabled = true;
 
-        const res = await axios.post(`/home/addToCart?id=${productId}&&quantity=1`, null, { headers: { "Authorization": token } });
+        const res = await axios.post(`/addToCart?id=${productId}&&quantity=1`, null, { headers: { "Authorization": token } });
 
         if (res.status === 200) {
           button.innerHTML = "Added";
@@ -372,7 +372,7 @@ async function showProducts(category, page) {
 
 
 
-    if (window.location.href !== `${website}/home`) {
+    if (window.location.href !== `${website}/`) {
       showPagination(res)
     }
     // console.log(res.data)
@@ -391,7 +391,7 @@ async function showProducts(category, page) {
 
 async function updateCartIcon() {
   try {
-    const res = await axios.get('/home/getCart', { headers: { "Authorization": token } });
+    const res = await axios.get('/getCart', { headers: { "Authorization": token } });
     const cartQuantity = res.data.products.length;
 
     const cartIcon = document.getElementById('cart-icon');
@@ -467,30 +467,27 @@ window.addEventListener('DOMContentLoaded', async () => {
       updateCartIcon()
     }
 
-    if (window.location.href === `${website}/home`) {
+    if (window.location.href === `${website}/`) {
       showProducts('Featured');
       console.log('***********')
 
     }
 
-    if (window.location.href === `${website}/home/men`) {
+    if (window.location.href === `${website}/men`) {
       const page = localStorage.getItem('mPage') || 1
 
-      // const res = await axios.get(`/home/getMenProducts?page=${page}`);
       showProducts("Men", page);
     }
 
-    if (window.location.href === `${website}/home/women`) {
+    if (window.location.href === `${website}/women`) {
       const page = localStorage.getItem('wPage') || 1
 
-      // const res = await axios.get(`/home/getWomenProducts?page=${page}`);
       showProducts('Women', page);
     }
 
-    if (window.location.href === `${website}/home/kids`) {
+    if (window.location.href === `${website}/kids`) {
       const page = localStorage.getItem('kPage') || 1
 
-      // const res = await axios.get(`/home/getKidsProducts?page=${page}`);
       showProducts('Kids', page);
     }
 
@@ -519,7 +516,7 @@ function debounce(cb, delay) {
 
 async function searchProducts(query) {
   try {
-    const res = await axios.get(`/home/seachProducts?search=${query}`);
+    const res = await axios.get(`/seachProducts?search=${query}`);
     // console.log(res)
     displayResult(res);
 
@@ -544,7 +541,7 @@ function displayResult(res) {
   }
   result.innerHTML = limitedProducts.map((e) => `
   <div class="result-item">
-        <a href="/home/viewProduct?id=${e._id}" class="text-reset text-decoration-none">${e.title}</a>
+        <a href="/viewProduct?id=${e._id}" class="text-reset text-decoration-none">${e.title}</a>
     </div>
   `
   ).join("");
@@ -572,14 +569,9 @@ searchBtn.addEventListener('click', (e) => {
   if (searchValue.trim().length === 0) {
     return
   }
-  const destinationUrl = `/home/viewAllSeachProducts?search=${searchValue}`;
+  const destinationUrl = `/viewAllSeachProducts?search=${searchValue}`;
 
   window.location.href = destinationUrl;
-  // console.log(e.target.parentElement)
-  // searchBtn.href = `/home/viewAllSeachProducts?search=${searchValue}`
-  // console.log(searchBtn)
-  // searchBtn.click();
-  // e.target.parentElement.click();
 })
 
 

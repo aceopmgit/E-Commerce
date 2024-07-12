@@ -335,7 +335,7 @@ exports.resetEmail = async (req, res, next) => {
                 to: req.body.email,
                 subject: 'Change Password',
                 html: `<P>Here is your change password link</P>
-                <a href="${process.env.WEBSITE}/home/resetpassword/${s._id}">Change Your Password</a>`
+                <a href="${process.env.WEBSITE}/resetpassword/${s._id}">Change Your Password</a>`
             }
 
             transporter.sendMail(mailOptions, (error, info) => {
@@ -511,13 +511,13 @@ exports.resetpassword = async (req, res, next) => {
                     newPassword: newPassword,
                     confirmNewPassword: confirmNewPassword
                 }
-                const res = await axios.post("/home/updatepassword/${id}", details)
+                const res = await axios.post("/updatepassword/${id}", details)
                 // document.getElementById('alertMessage').innerHTML = res.data.message;
                 // const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
                 // alertModal.show();
                 alert(res.data.message);
 
-                window.location.href = "/home";
+                window.location.href = "/";
 
 
             } catch (err) {

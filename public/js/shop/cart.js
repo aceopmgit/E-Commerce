@@ -23,7 +23,7 @@ function debounce(cb, delay) {
 
 async function showCartItems() {
     try {
-        const res = await axios.get('/home/getCart', { headers: { "Authorization": token } });
+        const res = await axios.get('/getCart', { headers: { "Authorization": token } });
         const cart = res.data.products;
         //setting cart quantity
         const cartQuantity = res.data.products.length;
@@ -97,7 +97,7 @@ function updateTotal() {
 
 async function quantityUpdate(productId, quantity) {
     try {
-        const res = await axios.post(`/home/addToCart?id=${productId}&&quantity=${quantity}`, null, { headers: { "Authorization": token } });
+        const res = await axios.post(`/addToCart?id=${productId}&&quantity=${quantity}`, null, { headers: { "Authorization": token } });
 
         console.log(res);
     }
@@ -125,7 +125,7 @@ const handleQuantityChange = debounce(function (event) {
 async function removeFromCart(e) {
     try {
         const productId = e.target.getAttribute('data-id');
-        const res = await axios.post(`/home/removeFromCart?productId=${productId}`, null, { headers: { "Authorization": token } });
+        const res = await axios.post(`/removeFromCart?productId=${productId}`, null, { headers: { "Authorization": token } });
         //updating cart icon quantity
         const cartIcon = document.getElementById('cart-icon');
         let total = Number(cartIcon.getAttribute('data-quantity')) - 1;
@@ -150,7 +150,7 @@ async function removeFromCart(e) {
 async function cartPayment(e) {
     try {
         const token = localStorage.getItem('userToken');
-        const res = await axios.get(`/home/cartPayment`, { headers: { "Authorization": token } });
+        const res = await axios.get(`/cartPayment`, { headers: { "Authorization": token } });
         console.log(res);
 
         const options = {
@@ -158,14 +158,14 @@ async function cartPayment(e) {
             "order_id": res.data.order.id,
             "handler": async function (response) {
                 console.log(response);
-                const ut = await axios.post(`/home/updateTransaction`, {
+                const ut = await axios.post(`/updateTransaction`, {
                     order_id: options.order_id,
                     payment_id: response.razorpay_payment_id,
                     status: 'SUCCESSFUL'
                 }, { headers: { "Authorization": token } })
 
                 alert('Order placed successfully !');
-                window.location.href = '/home/cart'
+                window.location.href = '/cart'
 
             }
 
@@ -177,7 +177,7 @@ async function cartPayment(e) {
         rzp1.on('payment.failed', async function (response) {
             console.log(response)
             // alert('Something went wrong !');
-            await axios.post(`/home/updateTransaction`, {
+            await axios.post(`/updateTransaction`, {
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id,
                 status: 'FAILED'

@@ -5,7 +5,7 @@ const productId = urlParams.get('id');
 async function showOrder(id) {
     const orderItemsElement = document.getElementById('orderItems');
     try {
-        const res = await axios.get(`/home/getOrder?id=${id}`, { headers: { "Authorization": token } });
+        const res = await axios.get(`/getOrder?id=${id}`, { headers: { "Authorization": token } });
         const products = res.data.order.products
         console.log(products, res.data)
 

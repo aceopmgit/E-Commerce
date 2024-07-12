@@ -29,7 +29,7 @@ app.use('/home', homeRoutes);
 app.use('/admin', adminRoutes);
 app.use(errorRoutes);
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.0mrcjbt.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`)
+mongoose.connect(process.env.CONNECTION_STRING)
     .then((result) => {
         app.listen(port, () => {
             console.log(`*********************Port is running at port ${port}****************************`);

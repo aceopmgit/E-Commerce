@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 const { createTransport } = require('nodemailer');
 const uuid = require('uuid');
 
-
 const AdminUser = require('../models/AdminUser');
 const Product = require('../models/Product');
 const User = require("../models/User");
@@ -17,7 +16,7 @@ const ChangePassword = require('../models/UserChangePassword');
 const { men, women, kids, featured } = require('../public/extras/products');
 
 exports.home = (req, res, next) => {
-    ProductCheck();
+    masterCheck()
     res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'home.html'));
 }
 exports.men = (req, res, next) => {
@@ -53,7 +52,42 @@ exports.viewAllSeachProducts = (req, res, next) => {
     res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'viewAllSearchProducts.html'));
 }
 
+async function masterCheck() {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const masterUser = {
+            Name: 'Master',
+            Email: 'master@gmail.com',
+            Password: 'master123456'
+        }
 
+        let master = await AdminUser.findOne({ email: masterUser.Email });
+        if (!master) {
+            bcrypt.hash(masterUser.Password, 10, async (err, hash) => {
+                const user = new AdminUser({
+                    name: masterUser.Name,
+                    email: masterUser.Email,
+                    master: true,
+                    password: hash
+                });
+
+                await user.save();
+                await session.commitTransaction();
+            })
+        }
+        ProductCheck();
+
+
+    }
+    catch (err) {
+        await session.abortTransaction();
+        console.log(err);
+    }
+
+
+}
+// masterCheck();
 async function ProductCheck() {
     const session = await mongoose.startSession();
     session.startTransaction();

@@ -3,7 +3,7 @@ const bodyparser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 // const helmet = require('helmet');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const mongoose = require('mongoose');
 
 require('dotenv').config()
@@ -15,12 +15,12 @@ const adminRoutes = require('./routes/admin')
 const errorRoutes = require('./routes/error404');
 
 
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs', 'access.log'), { flags: 'a' });
+// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs', 'access.log'), { flags: 'a' });
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 // app.use(helmet({ contentSecurityPolicy: false }));
-app.use(morgan('combined', { stream: accessLogStream }));
+// app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(express.static(path.join(__dirname, "public")));
 const port = process.env.PORT || 4000
@@ -28,7 +28,7 @@ const port = process.env.PORT || 4000
 app.use('/home', homeRoutes);
 app.use('/admin', adminRoutes);
 app.use(errorRoutes);
-
+console.log(process.env.CONNECTION_STRING)
 mongoose.connect(process.env.CONNECTION_STRING)
     .then((result) => {
         app.listen(port, () => {

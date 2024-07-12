@@ -28,7 +28,7 @@ const port = process.env.PORT || 4000
 app.use(homeRoutes);
 app.use('/admin', adminRoutes);
 app.use(errorRoutes);
-console.log(process.env.CONNECTION_STRING)
+// console.log(process.env.CONNECTION_STRING)
 mongoose.connect(process.env.CONNECTION_STRING)
     .then((result) => {
         app.listen(port, () => {

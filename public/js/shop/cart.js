@@ -4,7 +4,18 @@ const checkoutButton = document.getElementById('checkoutButton');
 checkoutButton.addEventListener('click', cartPayment);
 let token = localStorage.getItem('userToken');
 
+async function quantityUpdate(productId, quantity) {
+    try {
+        const res = await axios.post(`/addToCart?id=${productId}&&quantity=${quantity}`, null, { headers: { "Authorization": token } });
 
+        console.log(res);
+    }
+    catch (err) {
+        document.body.innerHTML =
+            document.body.innerHTML + `<h4 style="color: red;">${err.message}</h4>`;
+        console.log(err);
+    }
+}
 //function for handling debouncing
 function debounce(cb, delay) {
     let timer;
@@ -19,6 +30,7 @@ function debounce(cb, delay) {
         }, delay)
     }
 }
+
 
 
 async function showCartItems() {
@@ -95,18 +107,7 @@ function updateTotal() {
     document.getElementById('cartTotal').innerHTML = `Total :₹ ${total}`;
 }
 
-async function quantityUpdate(productId, quantity) {
-    try {
-        const res = await axios.post(`/addToCart?id=${productId}&&quantity=${quantity}`, null, { headers: { "Authorization": token } });
 
-        console.log(res);
-    }
-    catch (err) {
-        document.body.innerHTML =
-            document.body.innerHTML + `<h4 style="color: red;">${err.message}</h4>`;
-        console.log(err);
-    }
-}
 
 const handleQuantityChange = debounce(function (event) {
     const input = event.target;

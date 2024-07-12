@@ -5,7 +5,7 @@ const changePasswordSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: 'User'
+        ref: 'AdminUser'
     },
     isActive: {
         type: Boolean,
@@ -18,7 +18,7 @@ const changePasswordSchema = new Schema({
 })
 
 
-module.exports = mongoose.model('UserChangePassword', changePasswordSchema);
+module.exports = mongoose.model('AdminChangePassword', changePasswordSchema);
 
 // const
 

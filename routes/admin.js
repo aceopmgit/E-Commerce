@@ -7,9 +7,15 @@ const authenticateAdmin = require('../controllers/authenticateAdmin')
 
 router.get('/login', adminController.adminLogin);
 router.post('/loginCheck', adminController.loginCheck);
+router.get('/forgotPasswordPage', adminController.forgotPasswordPage)
+router.post('/resetEmail', adminController.resetEmail);
+router.get('/resetpassword/:id', adminController.resetpassword);
+router.post('/updatepassword/:resetPasswordId', adminController.updatepassword);
+
 router.get('/add', adminController.add);
 router.get('/edit', adminController.edit);
 router.get('/delete', adminController.delete);
+
 router.get("/deleteProduct", adminController.deleteProduct);
 router.post('/addProduct', authenticateAdmin.adminAuthenticate, adminController.addProduct);
 router.get('/getProduct', adminController.getProduct);

@@ -119,7 +119,7 @@ async function loginUser(e) {
     // document.getElementById('alertMessage').innerHTML = res.data.message;
     // const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
     // alertModal.show();
-    // afterLoginButtons(token);
+    afterLoginButtons(token);
 
   } catch (err) {
     console.log(err)
@@ -144,7 +144,7 @@ function afterLoginButtons(token) {
   const dropdown = document.getElementById('dropdown-menu');
   dropdown.innerHTML = `  <button class="dropdown-item" id="profile" data-bs-toggle="modal"
                                 data-bs-target="#profileModal">Profile</button>
-                                <a class="dropdown-item" href="home/orders">Orders</a>
+                                <a class="dropdown-item" href="/orders">Orders</a>
                             <button class="dropdown-item" id='logout' data-bs-toggle="modal"
                                 data-bs-target="#logoutModal">Logout</button> `
 

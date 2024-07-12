@@ -165,7 +165,7 @@ async function cartPayment(e) {
                 }, { headers: { "Authorization": token } })
 
                 alert('Order placed successfully !');
-                window.location.href = '/cart'
+                window.location.href = '/'
 
             }
 

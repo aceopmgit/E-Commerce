@@ -17,7 +17,7 @@ async function showProducts(page) {
       <img src="${product.image}" alt="${product.title}" class="product-img">
           <div class="product-info">
               <h2 class="product-title">${product.title}</h2>
-              <p class="product-price">Rs.${product.price.toFixed(2)}</p>
+              <p class="product-price">₹ ${product.originalPrice.toFixed(2)}</p>
               <a class="edit-Product" id="${product._id}" href="/admin/editProduct?id=${product._id}">Edit</a>
           </div>
       </div>`

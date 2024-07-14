@@ -1,4 +1,5 @@
 async function showProducts(page) {
+    const token = localStorage.getItem('adminToken')
     try {
         const token = localStorage.getItem('adminToken')
         const res = await axios.get(`/admin/getAllProducts?page=${page}`, { headers: { "Authorization": token } });
@@ -13,24 +14,31 @@ async function showProducts(page) {
         productsList.innerHTML = products
             .map((product) =>
                 `
-      <div class="product">
+      <div class="product" id="product_${product._id}">
       <img src="${product.image}" alt="${product.title}" class="product-img">
           <div class="product-info">
               <h2 class="product-title">${product.title}</h2>
-              <p class="product-price">Rs.${product.price.toFixed(2)}</p>
-              <a class="edit-Product" id="${product._id}" href="/admin/deleteProduct?id=${product._id}">Delete</a>
+              <p class="product-price">₹ ${product.originalPrice.toFixed(2)}</p>
+              <button class="btn btn-block btn-danger" id="${product._id}">Delete</button>
           </div>
       </div>`
 
             ).join("");
 
-        // Array.from(document.getElementsByClassName('edit-Product')).forEach((x) => {
-        //     x.addEventListener('click', (e) => {
-        //         const id = e.target.id;
-        //         console.log(id)
-        //         window.location.href = `/admin/editProduct?id=${id}`;
-        //     })
-        // })
+        Array.from(document.getElementsByClassName('btn btn-block btn-danger')).forEach((x) => {
+            x.addEventListener('click', async (e) => {
+                try {
+                    const id = e.target.id;
+                    let res = await axios.get(`/admin/deleteProduct?id=${id}`, { headers: { "Authorization": token } });
+                    document.getElementById(`product_${id}`).remove();
+                    // console.log(id, res)
+                }
+                catch (err) {
+                    console.log(err)
+                }
+
+            })
+        })
 
 
         showPagination(res)

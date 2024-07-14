@@ -1,5 +1,5 @@
-const website = 'https://e-commerce-wheat-phi-28.vercel.app';
-// const website = 'http://localhost:4000';
+// const website = 'https://e-commerce-wheat-phi-28.vercel.app';
+const website = 'http://localhost:4000';
 const token = localStorage.getItem('userToken');
 
 const signupForm = document.getElementById('signupForm');
@@ -33,7 +33,11 @@ const changePasswordForm = document.getElementById('changePasswordForm');
 changePasswordForm.addEventListener('submit', resetEmail);
 
 const logout = document.getElementById('logoutYes');
-logout.addEventListener('click', () => { localStorage.removeItem('userToken') });
+logout.addEventListener('click', () => {
+  localStorage.removeItem('userToken');
+  window.location.reload();
+
+});
 
 
 

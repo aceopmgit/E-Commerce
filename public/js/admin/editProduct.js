@@ -14,7 +14,7 @@ async function editProduct(id) {
 
         document.getElementById('title').value = product.title;
         document.getElementById('color').value = product.color;
-        document.getElementById('price').value = product.price;
+        document.getElementById('price').value = product.originalPrice;
         document.getElementById('image').value = product.image;
         document.getElementById('category').value = product.category;
 
@@ -28,8 +28,9 @@ async function editProduct(id) {
 const editForm = document.getElementById('editProduct');
 editForm.addEventListener('submit', updateProduct);
 
-async function updateProduct() {
+async function updateProduct(e) {
     try {
+        e.preventDefault()
         const title = document.getElementById('title').value;
         const color = document.getElementById('color').value;
         const price = document.getElementById('price').value;
@@ -39,6 +40,7 @@ async function updateProduct() {
         const details = {
             title, color, price, image, category
         };
+        // console.log('0000000000000000000000000000000000000000000000000000000000000000000000', productId);
 
         const res = await axios.post(`/admin/updateProduct?id=${productId}`, details, { headers: { "Authorization": token } });
 
@@ -51,6 +53,7 @@ async function updateProduct() {
     catch (err) {
         document.body.innerHTML =
             document.body.innerHTML + `<h4 style="color: red;">${err.message}</h4>`;
+        console.log(err)
 
     }
 

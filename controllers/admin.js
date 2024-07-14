@@ -8,6 +8,7 @@ const uuid = require('uuid');
 const User = require('../models/AdminUser');
 const ChangePassword = require('../models/AdminChangePassword');
 const Product = require('../models/Product');
+const DeleteProduct = require('../models/DeletedProduct');
 
 exports.admin = (req, res, next) => {
     res.status(200).sendFile(path.join(__dirname, "..", "views", 'admin', 'admin.html'));
@@ -53,7 +54,7 @@ function generateAccessToken(id, name, master) {
 }
 
 
-
+// masterCheck();
 async function masterCheck() {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -87,7 +88,6 @@ async function masterCheck() {
 
 
 }
-// masterCheck();
 
 
 exports.addAdmin = async (req, res, next) => {
@@ -188,7 +188,8 @@ exports.addProduct = async (req, res, next) => {
         const product = new Product({
             title: title,
             color: color,
-            price: price,
+            originalPrice: price,
+            currentPrice: price,
             image: image,
             category: category,
             userId: req.adminUser._id
@@ -215,7 +216,7 @@ exports.addProduct = async (req, res, next) => {
 
 exports.getAllProducts = async (req, res, next) => {
     try {
-        let limit = 8;
+        let limit = 20;
         let page = Number(req.query.page);
 
         const total = await Product.find();
@@ -268,9 +269,10 @@ exports.updateProduct = async (req, res, next) => {
     session.startTransaction();
     try {
         const id = req.query.id;
+        // console.log('************line270_ad_controller******************', id)
         const { title, color, price, image, category } = req.body;
         const date = new Date()
-        await Product.updateOne({ _id: id }, { $set: { title: title, price: price, category: category, image: image, color: color, edited: true, editedBy: req.adminUser._id, editDate: date } });
+        await Product.updateOne({ _id: id }, { $set: { title: title, originalPrice: price, category: category, image: image, color: color, edited: true, editedBy: req.adminUser._id, editDate: date } });
         await session.commitTransaction()
 
         res.status(201).json({
@@ -293,6 +295,25 @@ exports.deleteProduct = async (req, res, next) => {
     session.startTransaction();
     try {
         const id = req.query.id;
+        const deletedProduct = await Product.findOne({ _id: id });
+        // console.log('deleted product**********;line 299_admin con', deletedProduct)
+
+        const product = new DeleteProduct({
+            productId: deletedProduct._id,
+            title: deletedProduct.title,
+            originalPrice: deletedProduct.originalPrice,
+            currentPrice: deletedProduct.currentPrice,
+            category: deletedProduct.category,
+            userId: deletedProduct.userId,
+            image: deletedProduct.image,
+            color: deletedProduct.color,
+            deletedBy: req.adminUser._id,
+            createdDate: deletedProduct.createdDate,
+        });
+
+        let x = await product.save()
+        // console.log('**********deleted_product line314 admin_con*******', x)
+
         await Product.deleteOne({ _id: id })
         await session.commitTransaction()
 
@@ -593,3 +614,134 @@ exports.updatepassword = async (req, res, next) => {
         session.endSession();
     }
 }
+
+//admin previleges
+exports.createAdmin = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const name = req.body.Name;
+        const email = req.body.Email;
+        const password = req.body.Password;
+
+        let userExist = await User.findOne({ email })
+
+        if (isStringInvalid(name) || isStringInvalid(email) || isStringInvalid(password)) {
+            return res.status(400).json({ status: false, message: 'Bad Parameter. Something is Misssing !' });
+        }
+
+        if (!userExist) {
+            bcrypt.hash(password, 10, async (err, hash) => {
+                console.log(err);
+
+                const user = new User({
+                    name: name,
+                    email: email,
+                    password: hash,
+                },);
+
+                await user.save()
+
+                await session.commitTransaction()
+                res.status(201).json({ status: true, message: "New Admin Created Successfully !" });
+            });
+        }
+        else {
+            res.status(409).json({ message: 'Email already exist!' });
+        }
+
+
+    } catch (err) {
+        await session.abortTransaction();
+        res.status(500).json({
+            Error: err,
+        });
+        console.log(err)
+    } finally {
+        session.endSession
+    }
+};
+
+exports.showAdmins = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        // console.log('********admin controller line 647', req.adminUser)
+        if (!req.adminUser.master) {
+            res.status(403).json({ status: false, message: "Unauthorised User!" })
+        }
+        const users = await User.find({ email: { $ne: req.adminUser.email } });
+        // console.log('*************Line 651 admin controller -users************', users)
+        res.status(201).json({ status: true, users: users });
+
+
+    } catch (err) {
+        await session.abortTransaction();
+        res.status(500).json({
+            Error: err,
+        });
+        console.log(err)
+    } finally {
+        session.endSession
+    }
+}
+
+exports.getAdminInfo = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        // console.log('********admin controller line 647', req.adminUser)
+        if (!req.adminUser.master) {
+            res.status(403).json({ status: false, message: "Unauthorised User!" })
+        }
+        const user = await User.find({ email: req.query.email });
+        // console.log('*************Line 651 admin controller -users************', users)
+        res.status(201).json({ status: true, users: user });
+
+
+    } catch (err) {
+        await session.abortTransaction();
+        res.status(500).json({
+            Error: err,
+        });
+        console.log(err)
+    } finally {
+        session.endSession
+    }
+}
+
+exports.editAdminInfo = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const name = req.body.Name;
+        const email = req.body.Email;
+        const oldEmail = req.body.oldEmail;
+        const password = req.body.Password;
+        console.log('*********line 699 admin controller*****', oldEmail)
+
+
+        if (isStringInvalid(name) || isStringInvalid(email) || isStringInvalid(password)) {
+            return res.status(400).json({ status: false, message: 'Bad Parameter. Something is Misssing !' });
+        }
+        bcrypt.hash(password, 10, async (err, hash) => {
+            console.log(err);
+            const x = await User.updateOne({ email: oldEmail }, { name: name, email: email, password: hash })
+
+            await session.commitTransaction()
+            res.status(201).json({ status: true, newAdminInfo: x, message: `Admin user info updated successfully !` });
+        });
+
+
+
+    } catch (err) {
+        await session.abortTransaction();
+        res.status(500).json({
+            Error: err,
+        });
+        console.log(err)
+    } finally {
+        session.endSession
+    }
+};
+

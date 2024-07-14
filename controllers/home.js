@@ -313,10 +313,11 @@ exports.resetEmail = async (req, res, next) => {
     session.startTransaction();
     try {
 
-
+        // console.log(req.body.email)
+        // console.log('user******99999999', u)
         const user = await User.findOne({ email: req.body.email }).select('_id name');
 
-        if (user) {
+        if (req.user.email === req.body.email) {
             const f = new ChangePassword({ isActive: true, userId: user._id });
             const s = await f.save();
 
@@ -349,7 +350,8 @@ exports.resetEmail = async (req, res, next) => {
             await session.commitTransaction();
 
         } else {
-            throw new Error('User not Found !')
+            // res.status(400).json({ message: `Please enter valid email of the account`, sucess: false });
+            throw new Error('Please enter valid email of the account!')
         }
     } catch (err) {
         await session.abortTransaction();

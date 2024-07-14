@@ -16,7 +16,7 @@ router.get('/add', adminController.add);
 router.get('/edit', adminController.edit);
 router.get('/delete', adminController.delete);
 
-router.get("/deleteProduct", adminController.deleteProduct);
+router.get("/deleteProduct", authenticateAdmin.adminAuthenticate, adminController.deleteProduct);
 router.post('/addProduct', authenticateAdmin.adminAuthenticate, adminController.addProduct);
 router.get('/getProduct', adminController.getProduct);
 router.get('/getAllProducts', authenticateAdmin.adminAuthenticate, adminController.getAllProducts);
@@ -24,6 +24,9 @@ router.get('/editProduct', adminController.editProduct);
 router.post('/updateProduct', authenticateAdmin.adminAuthenticate, adminController.updateProduct)
 router.get('/', adminController.admin);
 
-
+router.post('/createAdmin', authenticateAdmin.adminAuthenticate, adminController.createAdmin);
+router.get('/showAdmins', authenticateAdmin.adminAuthenticate, adminController.showAdmins);
+router.get('/getAdminInfo', authenticateAdmin.adminAuthenticate, adminController.getAdminInfo);
+router.post('/editAdminInfo', authenticateAdmin.adminAuthenticate, adminController.editAdminInfo);
 module.exports = router;
 

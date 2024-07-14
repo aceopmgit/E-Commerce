@@ -335,7 +335,6 @@ exports.resetEmail = async (req, res, next) => {
     session.startTransaction();
     try {
 
-
         const user = await User.findOne({ email: req.body.email }).select('_id name');
 
         if (user) {
@@ -458,13 +457,7 @@ exports.resetpassword = async (req, res, next) => {
                         <h2 class="card-title">Login</h2>
 
                         <form id="changePasswordForm">
-                            <div class="form-floating">
-                                <input type="password" id="currentPassword" name="currentPassword" class="form-control"
-                                    placeholder="Enter Current Password" required />
-                                <label for="currentPassword" class="form-label">Enter Current Password</label>
-                                <br />
-                            </div>
-
+                            
                             <div class="form-floating">
                                 <input type="password" id="newPassword" name="newPassword" class="form-control"
                                     placeholder="Enter New Password" required />
@@ -514,11 +507,10 @@ exports.resetpassword = async (req, res, next) => {
         async function resetPassword(e) {
             try {
                 e.preventDefault()
-                const currentPassword = document.getElementById('currentPassword').value;
                 const newPassword = document.getElementById("newPassword").value;
                 const confirmNewPassword = document.getElementById("confirmNewPassword").value;
 
-                if (currentPassword.trim() === "" || newPassword.trim() === "" || confirmNewPassword.trim() === "") {
+                if (newPassword.trim() === "" || confirmNewPassword.trim() === "") {
                     document.getElementById('error').innerHTML = 'Please Enter valid password';
                     return
                 }
@@ -529,7 +521,6 @@ exports.resetpassword = async (req, res, next) => {
                 }
 
                 const details = {
-                    currentPassword: currentPassword,
                     newPassword: newPassword,
                     confirmNewPassword: confirmNewPassword
                 }
@@ -538,8 +529,10 @@ exports.resetpassword = async (req, res, next) => {
                 // const alertModal = new bootstrap.Modal(document.getElementById('alertMessageModal'));
                 // alertModal.show();
                 alert(res.data.message);
+                document.getElementById('error').innerHTML = '';
 
                 window.location.href = "/";
+
 
 
             } catch (err) {
@@ -571,41 +564,29 @@ exports.updatepassword = async (req, res, next) => {
     session.startTransaction();
 
     try {
-        const { currentPassword, newPassword, confirmNewPassword } = req.body;
+        const { email, newPassword, confirmNewPassword } = req.body;
         const { resetPasswordId } = req.params;
 
         const reset = await ChangePassword.findOne({ _id: resetPasswordId });
 
         const user = await User.findOne({ _id: reset.userId });
 
-        //checking current Password 
 
-        if (user) {
-            bcrypt.compare(currentPassword, user.password, async (err, result) => {
-                if (result === true) {
-                    if (newPassword !== confirmNewPassword) {
-                        res
-                            .status(400)
-                            .json({ success: false, message: "Password do not match !" });
-                    }
-
-
-                    const hash = await bcrypt.hash(newPassword, 10);
-                    await User.updateOne({ _id: user._id }, { $set: { password: hash } });
-
-                    res.status(200).json({ status: true, message: "User Password reset successful" });
-                } else {
-                    res
-                        .status(400)
-                        .json({ success: false, message: "Incorrect Password !" });
-                }
-            });
-
+        if (newPassword !== confirmNewPassword) {
+            res
+                .status(400)
+                .json({ success: false, message: "Password do not match !" });
         }
-        else {
+
+        if (!user) {
             throw new Error('No user exists');
         }
 
+        const hash = await bcrypt.hash(newPassword, 10);
+        await User.updateOne({ _id: user._id }, { $set: { password: hash } });
+
+        await session.commitTransaction();
+        res.status(201).json({ status: true, message: "Your Password reset successful" });
     } catch (err) {
         await session.abortTransaction();
         console.error(err);

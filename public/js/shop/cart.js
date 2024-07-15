@@ -47,6 +47,7 @@ async function showCartItems() {
             const cartData = document.getElementById('cartData');
             cartData.innerHTML = `<h4>Your cart is Empty</h4>`;
         } else {
+
             cartItemsElement.innerHTML = cart
                 .map((item) => `
             <div class="cart-item" id="cartItem_${item.productId._id}">

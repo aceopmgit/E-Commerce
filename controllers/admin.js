@@ -272,7 +272,7 @@ exports.updateProduct = async (req, res, next) => {
         // console.log('************line270_ad_controller******************', id)
         const { title, color, price, image, category } = req.body;
         const date = new Date()
-        await Product.updateOne({ _id: id }, { $set: { title: title, originalPrice: price, category: category, image: image, color: color, edited: true, editedBy: req.adminUser._id, editDate: date } });
+        await Product.updateOne({ _id: id }, { $set: { title: title, originalPrice: price, currentPrice: price, category: category, image: image, color: color, edited: true, editedBy: req.adminUser._id, editDate: date } });
         await session.commitTransaction()
 
         res.status(201).json({

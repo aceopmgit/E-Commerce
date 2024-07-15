@@ -10,6 +10,7 @@ async function showOrders() {
         const res = await axios.get('/getOrders', { headers: { "Authorization": token } });
         // console.log(res.data)
         const orders = res.data.products;
+        console.log("orders", orders)
 
 
         if (orders.length === 0) {
@@ -21,13 +22,16 @@ async function showOrders() {
             for (let i = 0; i < orders.length; i++) {
                 let prodName = ""
                 for (let j = 0; j < orders[i].products.length; j++) {
-                    // console.log(orders[i].products[j]);
 
-                    if (j !== orders[i].products.length - 1) {
+                    if (j !== (orders[i].products.length - 1)) {
+                        console.log(j, orders[i].products[j], orders[i].products[j].productId.title, orders[i].products[j].productId);
+
                         prodName += orders[i].products[j].productId.title + ` (x${orders[i].products[j].quantity})` + " ,"
                     } else {
+                        console.log(j, orders[i].products[j], orders[i].products[j].productId.title, orders[i].products[j].productId);
                         prodName += orders[i].products[j].productId.title + ` (x${orders[i].products[j].quantity})`;
                     }
+
 
 
                 }

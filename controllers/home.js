@@ -4,7 +4,6 @@ const Razorpay = require('razorpay');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { createTransport } = require('nodemailer');
-const uuid = require('uuid');
 
 const AdminUser = require('../models/AdminUser');
 const Product = require('../models/Product');
@@ -20,13 +19,16 @@ exports.home = (req, res, next) => {
     res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'home.html'));
 }
 exports.men = (req, res, next) => {
+    masterCheck()
     res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'men.html'));
 }
 exports.women = (req, res, next) => {
+    masterCheck()
     res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'women.html'));
 }
 
 exports.kids = (req, res, next) => {
+    masterCheck()
     res.status(200).sendFile(path.join(__dirname, "..", "views", 'shop', 'kids.html'));
 }
 
@@ -63,20 +65,29 @@ async function masterCheck() {
         }
 
         let master = await AdminUser.findOne({ email: masterUser.Email });
-        if (!master) {
+        console.log(master)
+        if (master == null) {
+            console.log('line70***homeC', master)
             bcrypt.hash(masterUser.Password, 10, async (err, hash) => {
-                const user = new AdminUser({
-                    name: masterUser.Name,
-                    email: masterUser.Email,
-                    master: true,
-                    password: hash
-                });
+                try {
+                    const user = new AdminUser({
+                        name: masterUser.Name,
+                        email: masterUser.Email,
+                        master: true,
+                        password: hash
+                    });
 
-                await user.save();
-                await session.commitTransaction();
+                    const x = await user.save();
+                    ProductCheck();
+                    console.log('lone81 homeC**********', x)
+                    await session.commitTransaction();
+                } catch (err) {
+                    console.log(err)
+                }
+
             })
         }
-        ProductCheck();
+
 
 
     }
@@ -96,6 +107,7 @@ async function ProductCheck() {
 
         if (allproducts.length === 0) {
             const master = await AdminUser.findOne({ email: 'master@gmail.com' });
+            console.log(master)
             let a = men.map(async (x) => {
                 let product = new Product({
                     title: x.title,
@@ -906,11 +918,13 @@ exports.getOrders = async (req, res, next) => {
         // let x = await req.user.populate('cart.items.productId')
         let x = await Order.find({ userId: req.user._id, status: "SUCCESSFUL" }).populate('products.productId');
         // let products = req.user.cart.items;
+        console.log('line 909 home controller***************', x[0].products)
         const products = x.map((e) => {
             return { products: e.products, amount: e.orderAmount, orderId: e._id }
         })
+        console.log('line 913*********homeC', products);
         // console.log('**********orders******', x[0].products, x, products[])
-        console.log('orderAmt****************', x, x.orderAmount)
+        // console.log('orderAmt****************', x, x.orderAmount)
 
         // products.forEach((e) => {
         //     e.productId.currentPrice = e.productId.originalPrice * e.quantity;

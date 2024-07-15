@@ -26,13 +26,5 @@ const AdminUserSchema = new Schema({
 
 })
 
-// Defining pre-save middleware to set createdDate
-AdminUserSchema.pre('save', function (next) {
-    // Set createdDate to current date/time if not already set
-    if (!this.createdDate) {
-        this.createdDate = new Date();
-    }
-    next();
-});
 
 module.exports = mongoose.model('AdminUser', AdminUserSchema);

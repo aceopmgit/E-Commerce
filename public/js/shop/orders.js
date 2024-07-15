@@ -2,6 +2,11 @@ const token = localStorage.getItem('userToken');
 async function showOrders() {
     const orderItemsElement = document.getElementById('orderItems');
     try {
+        //updating cart quantity
+        const cartQuantity = localStorage.getItem('cartQuantity');
+        const cartIcon = document.getElementById('cart-icon');
+        cartIcon.setAttribute('data-quantity', cartQuantity);
+
         const res = await axios.get('/getOrders', { headers: { "Authorization": token } });
         // console.log(res.data)
         const orders = res.data.products;

@@ -397,6 +397,7 @@ async function updateCartIcon() {
   try {
     const res = await axios.get('/getCart', { headers: { "Authorization": token } });
     const cartQuantity = res.data.products.length;
+    localStorage.setItem('cartQuantity', cartQuantity);
 
     const cartIcon = document.getElementById('cart-icon');
     cartIcon.setAttribute('data-quantity', cartQuantity);

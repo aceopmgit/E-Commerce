@@ -112,7 +112,13 @@ function updateTotal() {
 const handleQuantityChange = debounce(function (event) {
     const input = event.target;
     const productId = input.getAttribute('data-id');
-    const quantity = input.value;
+    let quantity = input.value;
+    if (quantity <= 0) {
+        input.value = 1;
+        quantity = input.value;
+
+    }
+
     quantityUpdate(productId, quantity);
 
     console.log(input, productId);
@@ -120,6 +126,7 @@ const handleQuantityChange = debounce(function (event) {
     const price = Number(priceElement.getAttribute('data-initial-price'));
     priceElement.innerHTML = price * Number(quantity);
     updateTotal()
+
 
 }, 1000)
 
@@ -183,6 +190,7 @@ async function cartPayment(e) {
                 payment_id: response.razorpay_payment_id,
                 status: 'FAILED'
             }, { headers: { "Authorization": token } })
+            alert('Something went wrong. Please try again !')
         })
 
     }

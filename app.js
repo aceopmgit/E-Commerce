@@ -11,7 +11,7 @@ require('dotenv').config()
 const app = express();
 
 const homeRoutes = require('./routes/home');
-const adminRoutes = require('./routes/admin')
+const adminRoutes = require('./routes/admin');
 const errorRoutes = require('./routes/error404');
 
 

@@ -1,5 +1,5 @@
-const website = 'https://e-commerce-wheat-phi-28.vercel.app';
-// const website = 'http://localhost:4000';
+// const website = 'https://e-commerce-wheat-phi-28.vercel.app';
+const website = 'http://localhost:4000';
 const token = localStorage.getItem('userToken');
 
 const signupForm = document.getElementById('signupForm');

@@ -836,7 +836,7 @@ exports.cartPayment = async (req, res, next) => {
                     throw new Error(JSON.stringify(err));
                 }
                 const o = new Order({ orderId: order.id, status: 'PENDING', userId: req.user._id, products: products, orderAmount: (amount / 100) });
-                console.log('*************order***************', o.products)
+                // console.log('*************order***************', o.products)
                 await o.save();
                 return res.status(201).json({ order, key_id: rzp.key_id });
             } catch (err) {
@@ -866,15 +866,19 @@ exports.updateTransaction = async (req, res, next) => {
     try {
         const { order_id, payment_id, status } = req.body;
         console.log('********************update*********************************', req.body)
-        const updateOrder = Order.updateOne(
+        if (status === 'SUCCESSFUL') {
+            const updateUser = await req.user.clearCart()
+        }
+        const updateOrder = await Order.updateOne(
             { orderId: order_id },
             { $set: { paymentId: payment_id, status: status } },
             { session }
         );
+        console.log('line 877**********home_control', updateOrder);
 
-        const updateUser = req.user.clearCart()
 
-        await Promise.all([updateOrder, updateUser]);
+
+        // await Promise.all([updateOrder, updateUser]);
 
         await session.commitTransaction();
 

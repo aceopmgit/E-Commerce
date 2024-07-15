@@ -19,12 +19,25 @@
 
     
 }
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure the header is above other content */
+    height: 60px; 
+    /* background-color: white; Or any background color that fits your design */
+}
+
 
 #main-header{
     color:var(--text-color);
     background-color: var(--main-color);
 
 }
+body {
+    padding-top: 60px; /* Adjust this value based on the height of your header */
+}
+
 
 
 .search-container {
@@ -66,9 +79,9 @@ color: var(--text-color);
     right: -11px;
     width: 20px;
     height: 20px;
-    background-color:#eb0505;
+    background-color:#c20534;
     border-radius: 50%;
-    color: var(--bg-color);
+    color: white;
     font-size: 12px;
     font-weight: 500;
     display: flex;
@@ -85,7 +98,7 @@ section{
 .home{
     position: relative;
     background: #f2f0f1;
-    min-height:700px;
+    min-height:600px;
     object-fit: cover;
     
 }

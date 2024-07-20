@@ -2,7 +2,7 @@ const token = localStorage.getItem('adminToken');
 const logout = document.getElementById('logoutYes');
 logout.addEventListener('click', () => {
     localStorage.removeItem('adminToken');
-    window.location.href = '/admin/login'
+    window.location.href = '/admin'
 
 });
 const createAdminForm = document.getElementById('createAdminForm');

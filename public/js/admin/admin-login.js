@@ -20,7 +20,7 @@ async function submitUser(e) {
         );
         alert(res.data.message);
         localStorage.setItem("adminToken", res.data.token);
-        window.location.href = "/admin/";
+        window.location.href = "/admin/home";
 
         //document.getElementById("email").value = "";
         //document.getElementById("password").value = "";
